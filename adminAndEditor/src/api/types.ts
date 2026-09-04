@@ -1,0 +1,138 @@
+export type UserRole = 'ADMIN' | 'EDITOR';
+export type ItemStatus = 'DRAFT' | 'PUBLISHED';
+export type ArtworkType = 'POSTER' | 'BANNER' | 'THUMBNAIL';
+export type PublishStatus = 'RUNNING' | 'SUCCESS' | 'FAILED';
+
+export interface User {
+  id: number;
+  email: string;
+  role: UserRole;
+  is_active: boolean;
+}
+
+export interface AuthResponse {
+  access_token: string;
+  token_type: string;
+  role: UserRole;
+  email: string;
+}
+
+export interface Artwork {
+  id: number;
+  show_id?: number | null;
+  episode_id?: number | null;
+  type: ArtworkType;
+  url: string;
+  width: number;
+  height: number;
+  file_size: number;
+  aspect_ratio: number;
+  created_at: string;
+}
+
+export interface Episode {
+  id: number;
+  season_id: number;
+  episode_number: number;
+  title: string;
+  description?: string | null;
+  duration?: number | null;
+  language: string;
+  content_group: string;
+  status: ItemStatus;
+  created_at: string;
+  updated_at: string;
+  artwork: Artwork[];
+}
+
+export interface Season {
+  id: number;
+  show_id: number;
+  season_number: number;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  episodes: Episode[];
+}
+
+export interface Show {
+  id: number;
+  title: string;
+  synopsis?: string | null;
+  section?: string | null;
+  category?: string | null;
+  status: ItemStatus;
+  created_at: string;
+  updated_at: string;
+  seasons: Season[];
+  artwork: Artwork[];
+}
+
+export interface ShowListItem {
+  id: number;
+  title: string;
+  synopsis?: string | null;
+  section?: string | null;
+  category?: string | null;
+  status: ItemStatus;
+  created_at: string;
+  updated_at: string;
+  seasons_count: number;
+  episodes_count: number;
+  artwork: Artwork[];
+}
+
+export interface ShowListResponse {
+  items: ShowListItem[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
+export interface ValidationErrorItem {
+  entity_type: string;
+  entity_id: number;
+  title: string;
+  reason: string;
+  show_id?: number | null;
+  show_title?: string | null;
+}
+
+export interface ValidationWarningItem {
+  entity_type: string;
+  entity_id: number;
+  title: string;
+  reason: string;
+}
+
+export interface ValidationReportResponse {
+  can_publish: boolean;
+  errors_count: number;
+  warnings_count: number;
+  errors: ValidationErrorItem[];
+  warnings: ValidationWarningItem[];
+}
+
+export interface PublishRun {
+  id: number;
+  started_at: string;
+  completed_at?: string | null;
+  triggered_by: string;
+  status: PublishStatus;
+  shows_count: number;
+  episodes_count: number;
+  catalogue_size: number;
+  error_message?: string | null;
+  created_at: string;
+}
+
+export interface PublishTriggerResponse {
+  message: string;
+  publish_run: PublishRun;
+}
+
+export interface PublishHistoryResponse {
+  items: PublishRun[];
+  total: number;
+}

@@ -1,0 +1,317 @@
+:root {
+  /* Strictly White and #543488 Palette */
+  --peblo-purple: #543488;
+  --peblo-purple-dark: #3f2669;
+  --peblo-purple-light: #6a44a6;
+  --peblo-purple-soft: rgba(84, 52, 136, 0.08);
+  --peblo-purple-hover: rgba(84, 52, 136, 0.14);
+  --peblo-purple-glow: rgba(84, 52, 136, 0.25);
+
+  --accent: #543488;
+  --accent-light: #6a44a6;
+  --accent-bg: rgba(84, 52, 136, 0.08);
+  --accent-glow: rgba(84, 52, 136, 0.25);
+  --danger: #543488;
+  --success: #543488;
+  --warning: #543488;
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #faf8fd;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f5f0fa;
+  --border: rgba(84, 52, 136, 0.16);
+  --border-strong: #543488;
+
+  --text-primary: #543488;
+  --text-secondary: rgba(84, 52, 136, 0.8);
+  --text-muted: rgba(84, 52, 136, 0.55);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 4px 14px rgba(84, 52, 136, 0.08);
+  --shadow-md: 0 8px 24px rgba(84, 52, 136, 0.12);
+  --shadow-lg: 0 16px 40px rgba(84, 52, 136, 0.16);
+
+  --font-heading: 'Fredoka', system-ui, sans-serif;
+  --font-body: 'Fredoka', 'Quicksand', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #ffffff;
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: #543488;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+input, select, textarea {
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #543488 !important;
+  box-shadow: 0 0 0 3px rgba(84, 52, 136, 0.12) !important;
+}
+
+/* Playful & Premium Keyframe Animations */
+@keyframes jellyBounce {
+  0% { transform: scale(1, 1); }
+  25% { transform: scale(1.18, 0.85) rotate(-5deg); }
+  40% { transform: scale(0.92, 1.15) rotate(4deg); }
+  60% { transform: scale(1.08, 0.95) rotate(-2deg); }
+  80% { transform: scale(0.98, 1.02); }
+  100% { transform: scale(1, 1); }
+}
+
+@keyframes floatAnimation {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 10px var(--peblo-purple-glow); }
+  50% { box-shadow: 0 0 22px var(--peblo-purple-glow); }
+  100% { box-shadow: 0 0 10px var(--peblo-purple-glow); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmerEffect {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+  animation: floatAnimation 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* Interactive PeBlo Logo with Bouncy Spring Physics */
+.peblo-logo-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.peblo-logo-link:hover {
+  background: rgba(84, 52, 136, 0.05);
+  transform: translateY(-2px);
+}
+
+.peblo-logo-img {
+  height: 42px;
+  object-fit: contain;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 2px 6px rgba(84, 52, 136, 0.15));
+}
+
+.peblo-logo-link:hover .peblo-logo-img {
+  animation: jellyBounce 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 8px 18px rgba(84, 52, 136, 0.35));
+}
+
+.peblo-logo-badge {
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background-color: rgba(84, 52, 136, 0.08);
+  border: 1.5px solid #543488;
+  color: #543488;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-heading);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.peblo-logo-link:hover .peblo-logo-badge {
+  background-color: #543488;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(84, 52, 136, 0.25);
+  transform: scale(1.05);
+}
+
+/* Sidebar Nav Links with Sliding Indicator */
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: #543488;
+  background-color: transparent;
+  border: 1.5px solid transparent;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  position: relative;
+}
+
+.sidebar-nav-link:hover {
+  background-color: rgba(84, 52, 136, 0.08);
+  transform: translateX(4px);
+  color: #543488;
+}
+
+.sidebar-nav-link.active {
+  background-color: #543488;
+  color: #ffffff;
+  font-weight: 700;
+  border-color: #543488;
+  box-shadow: 0 6px 16px rgba(84, 52, 136, 0.28);
+  transform: translateX(2px);
+}
+
+/* Interactive Card Hover Elevate */
+.interactive-card {
+  background-color: #ffffff;
+  border: 2px solid rgba(84, 52, 136, 0.15);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 14px rgba(84, 52, 136, 0.06);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive-card:hover {
+  transform: translateY(-3px);
+  border-color: #543488;
+  box-shadow: 0 12px 28px rgba(84, 52, 136, 0.14);
+}
+
+/* Interactive Table Rows */
+.interactive-row {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive-row:hover {
+  background-color: rgba(84, 52, 136, 0.04) !important;
+  transform: translateX(3px);
+}
+
+/* Buttons using strictly White and #543488 */
+.btn-peblo-primary, .btn-peblo-yellow {
+  background: #543488;
+  color: #ffffff !important;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 14px rgba(84, 52, 136, 0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px solid #543488;
+  padding: 10px 20px;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-peblo-primary:hover, .btn-peblo-yellow:hover {
+  background: #3f2669;
+  border-color: #3f2669;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 22px rgba(84, 52, 136, 0.35);
+}
+
+.btn-peblo-outline {
+  background: #ffffff;
+  color: #543488 !important;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: var(--radius-full);
+  border: 2px solid #543488;
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-peblo-outline:hover {
+  background: rgba(84, 52, 136, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(84, 52, 136, 0.12);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(84, 52, 136, 0.25);
+  border-radius: var(--radius-full);
+  border: 2px solid #ffffff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #543488;
+}
