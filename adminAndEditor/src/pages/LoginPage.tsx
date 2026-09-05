@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react';
+import { Lock, User as UserIcon, AlertCircle, ArrowRight } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -13,8 +13,8 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Please fill in both email and password.');
+    if (!identifier.trim() || !password) {
+      setError('Please fill in both your email/username and password.');
       return;
     }
 
@@ -22,7 +22,7 @@ export const LoginPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await login(email, password);
+      await login(identifier.trim(), password);
       navigate('/admin');
     } catch (err: any) {
       const detail = err.response?.data?.detail;
@@ -30,11 +30,6 @@ export const LoginPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleQuickLogin = (quickEmail: string, quickPass: string) => {
-    setEmail(quickEmail);
-    setPassword(quickPass);
   };
 
   return (
@@ -55,12 +50,13 @@ export const LoginPage: React.FC = () => {
           width: '100%',
           maxWidth: '460px',
           backgroundColor: '#ffffff',
-          border: '2px solid #543488',
-          borderRadius: 'var(--radius-xl)',
+          border: '3px solid #543488',
+          borderRadius: '38px 22px 42px 24px / 24px 44px 22px 40px',
           padding: '44px 36px',
-          boxShadow: '0 16px 40px rgba(84, 52, 136, 0.15)',
+          boxShadow: '0 20px 48px rgba(84, 52, 136, 0.16)',
           position: 'relative',
           zIndex: 10,
+          transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
         }}
       >
         {/* Brand Header with PeBlo Official Logo */}
@@ -102,16 +98,17 @@ export const LoginPage: React.FC = () => {
               gap: '10px',
               padding: '12px 16px',
               borderRadius: 'var(--radius-md)',
-              backgroundColor: 'rgba(84, 52, 136, 0.08)',
-              border: '1.5px solid #543488',
-              color: '#543488',
+              backgroundColor: '#fff1f2',
+              border: '1.5px solid #e11d48',
+              color: '#e11d48',
               fontSize: '13px',
-              fontWeight: 600,
+              fontWeight: 700,
               marginBottom: '20px',
               fontFamily: 'var(--font-heading)',
+              boxShadow: '0 4px 12px rgba(225, 29, 72, 0.08)',
             }}
           >
-            <AlertCircle size={18} style={{ flexShrink: 0 }} />
+            <AlertCircle size={18} color="#e11d48" style={{ flexShrink: 0 }} />
             <span>{error}</span>
           </div>
         )}
@@ -120,16 +117,17 @@ export const LoginPage: React.FC = () => {
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
             <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#543488', marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>
-              Email Address
+              Email Address or Username
             </label>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-              <Mail size={18} color="#543488" style={{ position: 'absolute', left: '14px' }} />
+              <UserIcon size={18} color="#543488" style={{ position: 'absolute', left: '14px' }} />
               <input
-                type="email"
+                type="text"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="editor@example.com"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder="admin@peblo.tv or peblo_admin"
+                autoComplete="username"
                 style={{
                   width: '100%',
                   padding: '13px 14px 13px 44px',
@@ -160,6 +158,7 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                autoComplete="current-password"
                 style={{
                   width: '100%',
                   padding: '13px 14px 13px 44px',
@@ -194,66 +193,8 @@ export const LoginPage: React.FC = () => {
             {!isSubmitting && <ArrowRight size={17} />}
           </button>
         </form>
-
-        {/* Demo Credentials Helper */}
-        <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1.5px solid rgba(84, 52, 136, 0.15)' }}>
-          <p style={{ fontSize: '13px', color: '#543488', textAlign: 'center', marginBottom: '12px', fontWeight: 600, fontFamily: 'var(--font-heading)' }}>
-            Demo one-click login accounts:
-          </p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('admin@example.com', 'Admin@123')}
-              style={{
-                padding: '10px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: '#ffffff',
-                border: '1.5px solid #543488',
-                color: '#543488',
-                fontSize: '13px',
-                fontWeight: 700,
-                fontFamily: 'var(--font-heading)',
-                boxShadow: '0 2px 8px rgba(84, 52, 136, 0.08)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#543488';
-                e.currentTarget.style.color = '#ffffff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#ffffff';
-                e.currentTarget.style.color = '#543488';
-              }}
-            >
-              👑 Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('editor@example.com', 'Editor@123')}
-              style={{
-                padding: '10px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: '#ffffff',
-                border: '1.5px solid #543488',
-                color: '#543488',
-                fontSize: '13px',
-                fontWeight: 700,
-                fontFamily: 'var(--font-heading)',
-                boxShadow: '0 2px 8px rgba(84, 52, 136, 0.08)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#543488';
-                e.currentTarget.style.color = '#ffffff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#ffffff';
-                e.currentTarget.style.color = '#543488';
-              }}
-            >
-              ✍️ Editor
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
+

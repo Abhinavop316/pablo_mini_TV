@@ -9,18 +9,19 @@ interface AuthContextType {
   isAdmin: boolean;
   isEditor: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Use sessionStorage so auth is strictly per-tab (independent tabs for Admin / Editor)
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('peblo_user');
+    const saved = sessionStorage.getItem('peblo_user');
     return saved ? JSON.parse(saved) : null;
   });
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('peblo_token'));
+  const [token, setToken] = useState<string | null>(() => sessionStorage.getItem('peblo_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           const res = await api.get<User>('/auth/me');
           setUser(res.data);
-          localStorage.setItem('peblo_user', JSON.stringify(res.data));
+          sessionStorage.setItem('peblo_user', JSON.stringify(res.data));
         } catch {
           logout();
         }
@@ -39,10 +40,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     verifyUser();
   }, [token]);
 
-  const login = async (email: string, password: string) => {
-    const res = await api.post('/auth/login', { email, password });
+  const login = async (identifier: string, password: string) => {
+    const res = await api.post('/auth/login', {
+      identifier: identifier.trim(),
+      email: identifier.trim(),
+      username: identifier.trim(),
+      password,
+    });
     const { access_token } = res.data;
-    localStorage.setItem('peblo_token', access_token);
+    sessionStorage.setItem('peblo_token', access_token);
     setToken(access_token);
 
     // Fetch user info
@@ -50,12 +56,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       headers: { Authorization: `Bearer ${access_token}` },
     });
     setUser(meRes.data);
-    localStorage.setItem('peblo_user', JSON.stringify(meRes.data));
+    sessionStorage.setItem('peblo_user', JSON.stringify(meRes.data));
   };
 
   const logout = () => {
-    localStorage.removeItem('peblo_token');
-    localStorage.removeItem('peblo_user');
+    sessionStorage.removeItem('peblo_token');
+    sessionStorage.removeItem('peblo_user');
     setToken(null);
     setUser(null);
   };

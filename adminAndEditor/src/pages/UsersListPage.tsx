@@ -95,7 +95,7 @@ export const UsersListPage: React.FC = () => {
         });
       }
       setEmailToast({
-        message: `Invitation email with password setup link sent to ${data.name ? `${data.name} (${data.email})` : data.email}!`,
+        message: `Invitation email sent to ${data.email}!`,
         type: 'success',
       });
       setTimeout(() => setEmailToast(null), 5000);
@@ -337,7 +337,7 @@ export const UsersListPage: React.FC = () => {
             Team & Editor Directory
           </h1>
           <p style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: '13px', margin: 0, lineHeight: 1.5 }}>
-            Invite team editors by email. Only the recipient can set their password upon verifying their email address.
+            Appoint team editors with unique usernames. Invitations with temporary credentials and verification links are emailed automatically.
           </p>
         </div>
 
@@ -397,7 +397,7 @@ export const UsersListPage: React.FC = () => {
             }}
           >
             <UserPlus size={16} color="#543488" />
-            Invite New Editor
+            Invite New Member
           </button>
         </div>
       </div>
@@ -584,7 +584,7 @@ export const UsersListPage: React.FC = () => {
             />
             <input
               type="text"
-              placeholder="Search by editor name or email..."
+              placeholder="Search by name, @username, or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="input-field"
@@ -658,23 +658,67 @@ export const UsersListPage: React.FC = () => {
             </button>
           </div>
 
-          <select
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-            className="input-field"
+          <div
             style={{
-              height: '38px',
+              display: 'flex',
+              backgroundColor: 'rgba(84, 52, 136, 0.05)',
               borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: 700,
-              padding: '0 12px',
-              border: '1.5px solid rgba(84, 52, 136, 0.15)',
+              padding: '3px',
+              border: '1px solid rgba(84, 52, 136, 0.1)',
             }}
           >
-            <option value="ALL">All Roles</option>
-            <option value="EDITOR">Editors Only</option>
-            <option value="ADMIN">Admins Only</option>
-          </select>
+            <button
+              onClick={() => setRoleFilter('ALL')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '9px',
+                fontSize: '12px',
+                fontWeight: 700,
+                fontFamily: 'var(--font-heading)',
+                backgroundColor: roleFilter === 'ALL' ? '#543488' : 'transparent',
+                color: roleFilter === 'ALL' ? '#ffffff' : '#543488',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.18s ease',
+              }}
+            >
+              All Roles
+            </button>
+            <button
+              onClick={() => setRoleFilter('EDITOR')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '9px',
+                fontSize: '12px',
+                fontWeight: 700,
+                fontFamily: 'var(--font-heading)',
+                backgroundColor: roleFilter === 'EDITOR' ? '#543488' : 'transparent',
+                color: roleFilter === 'EDITOR' ? '#ffffff' : '#543488',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.18s ease',
+              }}
+            >
+              Editors
+            </button>
+            <button
+              onClick={() => setRoleFilter('ADMIN')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '9px',
+                fontSize: '12px',
+                fontWeight: 700,
+                fontFamily: 'var(--font-heading)',
+                backgroundColor: roleFilter === 'ADMIN' ? '#543488' : 'transparent',
+                color: roleFilter === 'ADMIN' ? '#ffffff' : '#543488',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.18s ease',
+              }}
+            >
+              Admins
+            </button>
+          </div>
         </div>
       </div>
 
@@ -701,7 +745,7 @@ export const UsersListPage: React.FC = () => {
               No team members found
             </h3>
             <p style={{ color: 'rgba(84, 52, 136, 0.65)', fontSize: '13px', marginTop: '4px' }}>
-              {searchTerm ? 'Try searching with a different email keyword.' : 'Click "Invite New Editor" to send the first setup invitation.'}
+              {searchTerm ? 'Try searching with a different username or email keyword.' : 'Click "Invite New Editor" to send the first setup invitation.'}
             </p>
           </div>
         ) : (
@@ -710,7 +754,7 @@ export const UsersListPage: React.FC = () => {
               <thead>
                 <tr style={{ backgroundColor: 'rgba(84, 52, 136, 0.04)', borderBottom: '1.5px solid rgba(84, 52, 136, 0.1)' }}>
                   <th style={{ padding: '16px 20px', fontSize: '11px', fontWeight: 800, color: '#543488', textTransform: 'uppercase', letterSpacing: '0.06em', width: '32%' }}>
-                    Team Member
+                    Team Member & Username
                   </th>
                   <th style={{ padding: '16px 16px', fontSize: '11px', fontWeight: 800, color: '#543488', textTransform: 'uppercase', letterSpacing: '0.06em', width: '14%' }}>
                     Role
@@ -729,6 +773,7 @@ export const UsersListPage: React.FC = () => {
               <tbody>
                 {filteredUsers.map((item) => {
                   const isSelf = currentUser?.id === item.id;
+                  const isSuperAdmin = Boolean(item.is_superadmin);
                   const getInitials = (name?: string | null, email?: string) => {
                     if (name && name.trim()) {
                       const parts = name.trim().split(/\s+/);
@@ -763,7 +808,9 @@ export const UsersListPage: React.FC = () => {
                               width: '40px',
                               height: '40px',
                               borderRadius: '13px',
-                              background: item.role === 'ADMIN'
+                              background: isSuperAdmin
+                                ? 'linear-gradient(135deg, #543488 0%, #2d184c 100%)'
+                                : item.role === 'ADMIN'
                                 ? 'linear-gradient(135deg, #543488 0%, #3e2268 100%)'
                                 : 'linear-gradient(135deg, #7c4dbb 0%, #543488 100%)',
                               color: '#ffffff',
@@ -775,9 +822,10 @@ export const UsersListPage: React.FC = () => {
                               fontFamily: 'var(--font-heading)',
                               flexShrink: 0,
                               boxShadow: '0 3px 8px rgba(84, 52, 136, 0.18)',
+                              border: isSuperAdmin ? '1.5px solid #d97706' : 'none',
                             }}
                           >
-                            {initial}
+                            {isSuperAdmin ? '👑' : initial}
                           </div>
                           <div style={{ overflow: 'hidden' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -795,7 +843,23 @@ export const UsersListPage: React.FC = () => {
                               >
                                 {displayName}
                               </span>
-                              {isSelf && (
+                              {isSuperAdmin && (
+                                <span
+                                  style={{
+                                    fontSize: '9px',
+                                    backgroundColor: '#fffbeb',
+                                    color: '#b45309',
+                                    border: '1px solid #fde68a',
+                                    padding: '2px 6px',
+                                    borderRadius: '4px',
+                                    fontWeight: 800,
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  ROOT ADMIN (.env)
+                                </span>
+                              )}
+                              {isSelf && !isSuperAdmin && (
                                 <span
                                   style={{
                                     fontSize: '9px',
@@ -811,16 +875,23 @@ export const UsersListPage: React.FC = () => {
                                 </span>
                               )}
                             </div>
-                            <div style={{ fontSize: '12px', color: 'rgba(84, 52, 136, 0.6)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              {item.name && (
-                                <>
-                                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
-                                    {item.email}
-                                  </span>
-                                  <span>•</span>
-                                </>
-                              )}
-                              <span style={{ opacity: 0.8, whiteSpace: 'nowrap' }}>ID #{item.id}</span>
+                            <div style={{ fontSize: '12px', color: 'rgba(84, 52, 136, 0.65)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span
+                                style={{
+                                  fontWeight: 700,
+                                  color: '#543488',
+                                  backgroundColor: 'rgba(84, 52, 136, 0.07)',
+                                  padding: '1px 5px',
+                                  borderRadius: '5px',
+                                  fontFamily: 'monospace',
+                                }}
+                              >
+                                @{item.username || 'user'}
+                              </span>
+                              <span>•</span>
+                              <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px' }}>
+                                {item.email}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -919,8 +990,26 @@ export const UsersListPage: React.FC = () => {
                       {/* Actions Column */}
                       <td style={{ padding: '16px 20px', textAlign: 'right', whiteSpace: 'nowrap' }}>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                          {/* If Root SuperAdmin: Protected indicator */}
+                          {isSuperAdmin && (
+                            <span
+                              style={{
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                color: '#b45309',
+                                backgroundColor: '#fffbeb',
+                                border: '1px solid #fde68a',
+                                padding: '4px 10px',
+                                borderRadius: '8px',
+                              }}
+                              title="Root SuperAdmin defined in .env cannot be deleted or suspended."
+                            >
+                              🔒 Protected Root
+                            </span>
+                          )}
+
                           {/* If Pending: Show Resend Email and Link */}
-                          {isPending && (
+                          {!isSuperAdmin && isPending && (
                             <>
                               <button
                                 onClick={() => resendEmailMutation.mutate(item.id)}
@@ -933,7 +1022,7 @@ export const UsersListPage: React.FC = () => {
                                   alignItems: 'center',
                                   gap: '5px',
                                 }}
-                                title={`Resend password setup email to ${item.email}`}
+                                title={`Resend setup email to ${item.email}`}
                               >
                                 <Mail size={12} />
                                 Resend Email
@@ -957,8 +1046,8 @@ export const UsersListPage: React.FC = () => {
                             </>
                           )}
 
-                          {/* If Verified & Not Self: Show Suspend/Activate */}
-                          {!isSelf && !isPending && (
+                          {/* If Verified & Not Self & Not SuperAdmin: Show Suspend/Activate */}
+                          {!isSuperAdmin && !isSelf && !isPending && (
                             <button
                               onClick={() => toggleStatusMutation.mutate({ userId: item.id, isActive: !item.is_active })}
                               style={{
@@ -975,15 +1064,19 @@ export const UsersListPage: React.FC = () => {
                                 alignItems: 'center',
                                 gap: '4px',
                               }}
-                              title={item.is_active ? 'Suspend Editor' : 'Activate Editor'}
+                              title={
+                                item.is_active
+                                  ? `Suspend ${item.role === 'ADMIN' ? 'Administrator' : 'Editor'}`
+                                  : `Activate ${item.role === 'ADMIN' ? 'Administrator' : 'Editor'}`
+                              }
                             >
                               <Power size={11} />
                               {item.is_active ? 'Suspend' : 'Activate'}
                             </button>
                           )}
 
-                          {/* Delete Action (Except Self) */}
-                          {!isSelf && (
+                          {/* Delete Action (Except Self & SuperAdmin) */}
+                          {!isSuperAdmin && !isSelf && (
                             <button
                               onClick={() => setDeleteTargetUser(item)}
                               style={{
@@ -998,7 +1091,7 @@ export const UsersListPage: React.FC = () => {
                                 cursor: 'pointer',
                                 transition: 'all 0.15s ease',
                               }}
-                              title="Delete Editor"
+                              title={`Delete ${item.role === 'ADMIN' ? 'Administrator' : 'Editor'}`}
                               onMouseEnter={(e) => {
                                 e.currentTarget.style.backgroundColor = '#e11d48';
                                 e.currentTarget.style.color = '#ffffff';
@@ -1051,12 +1144,15 @@ export const UsersListPage: React.FC = () => {
               className="animate-fade-in"
               style={{
                 width: '100%',
-                maxWidth: '480px',
+                maxWidth: '520px',
                 backgroundColor: '#ffffff',
                 borderRadius: '26px',
                 boxShadow: '0 25px 60px -15px rgba(84, 52, 136, 0.4)',
                 overflow: 'hidden',
                 border: '2px solid rgba(84, 52, 136, 0.2)',
+                maxHeight: '90vh',
+                display: 'flex',
+                flexDirection: 'column',
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -1064,11 +1160,12 @@ export const UsersListPage: React.FC = () => {
               <div
                 style={{
                   background: 'linear-gradient(135deg, #543488 0%, #3e2268 100%)',
-                  padding: '26px 30px',
+                  padding: '24px 30px',
                   color: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
+                  flexShrink: 0,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -1096,10 +1193,10 @@ export const UsersListPage: React.FC = () => {
                         fontFamily: 'var(--font-heading)',
                       }}
                     >
-                      Invite Studio Editor
+                      Invite Team Member
                     </h3>
                     <p style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: '12px', margin: '2px 0 0' }}>
-                      Setup link is sent directly to their email
+                      Set a unique username & dispatch email invite
                     </p>
                   </div>
                 </div>
@@ -1123,7 +1220,7 @@ export const UsersListPage: React.FC = () => {
               </div>
 
               {/* Modal Body */}
-              <div style={{ padding: '28px 30px' }}>
+              <div style={{ padding: '24px 30px', overflowY: 'auto' }}>
                 {inviteError && (
                   <div
                     style={{
@@ -1145,7 +1242,8 @@ export const UsersListPage: React.FC = () => {
                   </div>
                 )}
 
-                <form onSubmit={handleInviteSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <form onSubmit={handleInviteSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {/* Full Name */}
                   <div>
                     <label
                       style={{
@@ -1159,7 +1257,7 @@ export const UsersListPage: React.FC = () => {
                         letterSpacing: '0.04em',
                       }}
                     >
-                      Editor Full Name
+                      Full Name
                     </label>
                     <div style={{ position: 'relative' }}>
                       <UserIcon
@@ -1181,7 +1279,7 @@ export const UsersListPage: React.FC = () => {
                         style={{
                           paddingLeft: '42px',
                           width: '100%',
-                          height: '46px',
+                          height: '42px',
                           borderRadius: '12px',
                           fontSize: '14px',
                           border: '2px solid rgba(84, 52, 136, 0.2)',
@@ -1190,6 +1288,26 @@ export const UsersListPage: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Informational Notice: Receiver picks username & password */}
+                  <div
+                    style={{
+                      padding: '12px 14px',
+                      borderRadius: '12px',
+                      backgroundColor: 'rgba(84, 52, 136, 0.05)',
+                      border: '1.5px dashed rgba(84, 52, 136, 0.25)',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '10px',
+                    }}
+                  >
+                    <span style={{ fontSize: '18px', lineHeight: 1 }}>✨</span>
+                    <div style={{ fontSize: '12px', color: '#543488', lineHeight: 1.45 }}>
+                      <strong style={{ display: 'block', marginBottom: '2px' }}>Receiver Chooses Handle & Password</strong>
+                      An invitation email with a secure setup link will be sent to the recipient. They will choose their unique <strong>@username</strong> and password when accepting the invite.
+                    </div>
+                  </div>
+
+                  {/* Recipient Email */}
                   <div>
                     <label
                       style={{
@@ -1226,7 +1344,7 @@ export const UsersListPage: React.FC = () => {
                         style={{
                           paddingLeft: '42px',
                           width: '100%',
-                          height: '46px',
+                          height: '42px',
                           borderRadius: '12px',
                           fontSize: '14px',
                           border: '2px solid rgba(84, 52, 136, 0.2)',
@@ -1235,37 +1353,109 @@ export const UsersListPage: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Assigned Role Interactive Cards */}
                   <div>
                     <label
                       style={{
                         fontSize: '12px',
                         fontWeight: 800,
                         color: '#543488',
-                        marginBottom: '6px',
+                        marginBottom: '8px',
                         display: 'block',
                         fontFamily: 'var(--font-heading)',
                         textTransform: 'uppercase',
                         letterSpacing: '0.04em',
                       }}
                     >
-                      Assigned Role
+                      Assigned Role & Permissions
                     </label>
-                    <select
-                      value={inviteRole}
-                      onChange={(e) => setInviteRole(e.target.value as 'EDITOR' | 'ADMIN')}
-                      className="input-field"
-                      style={{
-                        width: '100%',
-                        height: '46px',
-                        borderRadius: '12px',
-                        fontSize: '13px',
-                        fontWeight: 700,
-                        border: '2px solid rgba(84, 52, 136, 0.2)',
-                      }}
-                    >
-                      <option value="EDITOR">Editor (Create & manage catalogue shows and episodes)</option>
-                      <option value="ADMIN">Administrator (Full publishing and team control)</option>
-                    </select>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      {/* Editor Role Card */}
+                      <div
+                        onClick={() => setInviteRole('EDITOR')}
+                        style={{
+                          padding: '12px 14px',
+                          borderRadius: '14px',
+                          border: `2px solid ${inviteRole === 'EDITOR' ? '#543488' : 'rgba(84, 52, 136, 0.18)'}`,
+                          backgroundColor: inviteRole === 'EDITOR' ? 'rgba(84, 52, 136, 0.06)' : '#ffffff',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '6px',
+                          boxShadow: inviteRole === 'EDITOR' ? '0 4px 14px rgba(84, 52, 136, 0.12)' : 'none',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '16px' }}>✍️</span>
+                            <span style={{ fontWeight: 800, fontSize: '13px', color: '#543488', fontFamily: 'var(--font-heading)' }}>
+                              Editor
+                            </span>
+                          </div>
+                          <div
+                            style={{
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              border: `2px solid ${inviteRole === 'EDITOR' ? '#543488' : 'rgba(84, 52, 136, 0.3)'}`,
+                              backgroundColor: inviteRole === 'EDITOR' ? '#543488' : 'transparent',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            {inviteRole === 'EDITOR' && <Check size={11} color="#ffffff" strokeWidth={3} />}
+                          </div>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '11px', color: 'rgba(84, 52, 136, 0.75)', lineHeight: 1.35 }}>
+                          Manage catalogue shows, seasons & episode content.
+                        </p>
+                      </div>
+
+                      {/* Administrator Role Card */}
+                      <div
+                        onClick={() => setInviteRole('ADMIN')}
+                        style={{
+                          padding: '12px 14px',
+                          borderRadius: '14px',
+                          border: `2px solid ${inviteRole === 'ADMIN' ? '#543488' : 'rgba(84, 52, 136, 0.18)'}`,
+                          backgroundColor: inviteRole === 'ADMIN' ? 'rgba(84, 52, 136, 0.06)' : '#ffffff',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '6px',
+                          boxShadow: inviteRole === 'ADMIN' ? '0 4px 14px rgba(84, 52, 136, 0.12)' : 'none',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '16px' }}>🛡️</span>
+                            <span style={{ fontWeight: 800, fontSize: '13px', color: '#543488', fontFamily: 'var(--font-heading)' }}>
+                              Administrator
+                            </span>
+                          </div>
+                          <div
+                            style={{
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              border: `2px solid ${inviteRole === 'ADMIN' ? '#543488' : 'rgba(84, 52, 136, 0.3)'}`,
+                              backgroundColor: inviteRole === 'ADMIN' ? '#543488' : 'transparent',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            {inviteRole === 'ADMIN' && <Check size={11} color="#ffffff" strokeWidth={3} />}
+                          </div>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '11px', color: 'rgba(84, 52, 136, 0.75)', lineHeight: 1.35 }}>
+                          Full catalogue publishing triggers & team management.
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Information Box */}
@@ -1274,16 +1464,16 @@ export const UsersListPage: React.FC = () => {
                       backgroundColor: 'rgba(84, 52, 136, 0.04)',
                       border: '1px dashed rgba(84, 52, 136, 0.25)',
                       borderRadius: '12px',
-                      padding: '12px 16px',
+                      padding: '10px 14px',
                       fontSize: '12px',
                       color: '#543488',
                       lineHeight: 1.5,
                     }}
                   >
-                    ✉️ <strong>Notice:</strong> An invitation email with a secure verification link will be dispatched to the recipient's inbox. The editor will configure their own password.
+                    ✉️ <strong>Notice:</strong> An invitation email with a secure setup link will be dispatched. The receiver will choose their own unique @username and password.
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '4px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '6px' }}>
                     <button
                       type="button"
                       onClick={() => setIsInviteOpen(false)}
@@ -1311,7 +1501,7 @@ export const UsersListPage: React.FC = () => {
                         </>
                       ) : (
                         <>
-                          <Send size={15} /> Send Invitation
+                          <Send size={15} /> Send Invitation Email
                         </>
                       )}
                     </button>
@@ -1352,7 +1542,7 @@ export const UsersListPage: React.FC = () => {
               className="animate-fade-in"
               style={{
                 width: '100%',
-                maxWidth: '500px',
+                maxWidth: '520px',
                 backgroundColor: '#ffffff',
                 borderRadius: '26px',
                 padding: '32px',
@@ -1391,11 +1581,8 @@ export const UsersListPage: React.FC = () => {
               >
                 Invitation Sent! 🎉
               </h3>
-              <p style={{ color: 'rgba(84, 52, 136, 0.8)', fontSize: '14px', lineHeight: 1.5, marginBottom: '20px' }}>
-                We have sent the password setup & verification link to{' '}
-                <strong style={{ color: '#543488' }}>
-                  {successInviteData.name ? `${successInviteData.name} (${successInviteData.email})` : successInviteData.email}
-                </strong>.
+              <p style={{ color: 'rgba(84, 52, 136, 0.8)', fontSize: '14px', lineHeight: 1.5, marginBottom: '18px' }}>
+                Setup invitation sent to <strong style={{ color: '#543488' }}>{successInviteData.email}</strong>. The recipient can click the link in their inbox to choose their unique username and activate their account.
               </p>
 
               {/* Email Dispatch Info Box */}
@@ -1404,12 +1591,12 @@ export const UsersListPage: React.FC = () => {
                   backgroundColor: 'rgba(5, 150, 105, 0.08)',
                   border: '1.5px solid rgba(5, 150, 105, 0.25)',
                   borderRadius: '14px',
-                  padding: '14px 16px',
+                  padding: '12px 16px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
                   textAlign: 'left',
-                  marginBottom: '18px',
+                  marginBottom: '16px',
                 }}
               >
                 <Mail size={20} color="#059669" style={{ flexShrink: 0 }} />
@@ -1418,7 +1605,7 @@ export const UsersListPage: React.FC = () => {
                     Email Delivered to Recipient
                   </div>
                   <div style={{ fontSize: '12px', color: '#047857', marginTop: '2px' }}>
-                    The editor will click the button in their email to set their password.
+                    The recipient can verify their email and set their password directly.
                   </div>
                 </div>
               </div>
@@ -1429,8 +1616,8 @@ export const UsersListPage: React.FC = () => {
                   backgroundColor: 'rgba(84, 52, 136, 0.04)',
                   border: '1.5px solid rgba(84, 52, 136, 0.15)',
                   borderRadius: '14px',
-                  padding: '14px',
-                  marginBottom: '18px',
+                  padding: '12px 14px',
+                  marginBottom: '16px',
                   textAlign: 'left',
                 }}
               >
@@ -1482,21 +1669,6 @@ export const UsersListPage: React.FC = () => {
                 </div>
               </div>
 
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  fontSize: '12px',
-                  color: 'rgba(84, 52, 136, 0.7)',
-                  marginBottom: '22px',
-                }}
-              >
-                <Clock size={14} color="#543488" />
-                <span>Link is valid for <strong>7 days</strong>.</span>
-              </div>
-
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', gap: '6px' }}>
                   <button
@@ -1535,11 +1707,15 @@ export const UsersListPage: React.FC = () => {
       {/* CONFIRM DELETE MODAL (CUSTOM ALERT IN RED) */}
       <ConfirmModal
         isOpen={Boolean(deleteTargetUser)}
-        title="Revoke & Delete Editor"
-        itemName={deleteTargetUser?.email}
-        message="Are you sure you want to delete this account? The invitation link will be permanently revoked and the user will lose all access immediately."
-        confirmLabel="Delete Editor"
-        cancelLabel="Keep Editor"
+        title={deleteTargetUser?.role === 'ADMIN' ? 'Revoke & Delete Administrator' : 'Revoke & Delete Editor'}
+        itemName={deleteTargetUser ? `@${deleteTargetUser.username || deleteTargetUser.email}` : ''}
+        message={
+          deleteTargetUser?.role === 'ADMIN'
+            ? 'Are you sure you want to permanently delete this administrator account? All admin privileges will be revoked immediately.'
+            : 'Are you sure you want to delete this editor account? All editing access will be revoked immediately.'
+        }
+        confirmLabel={deleteTargetUser?.role === 'ADMIN' ? 'Delete Admin' : 'Delete Editor'}
+        cancelLabel={deleteTargetUser?.role === 'ADMIN' ? 'Keep Admin' : 'Keep Editor'}
         isDangerous={true}
         isLoading={deleteUserMutation.isPending}
         onConfirm={() => {

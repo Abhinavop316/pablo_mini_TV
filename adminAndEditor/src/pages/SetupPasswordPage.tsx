@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client';
-import type { VerifySetupTokenResponse, CompleteSetupResponse } from '../api/types';
+import type {
+  VerifySetupTokenResponse,
+  CompleteSetupResponse,
+  CheckUsernameResponse,
+} from '../api/types';
 import {
   AlertTriangle,
   Eye,
@@ -10,8 +14,8 @@ import {
   ShieldCheck,
   RefreshCw,
   Check,
+  X,
 } from 'lucide-react';
-
 
 export const SetupPasswordPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -22,6 +26,20 @@ export const SetupPasswordPage: React.FC = () => {
   const [tokenData, setTokenData] = useState<VerifySetupTokenResponse | null>(null);
   const [verifyError, setVerifyError] = useState<string | null>(null);
 
+  // Form State: Username & Password
+  const [desiredUsername, setDesiredUsername] = useState('');
+  const [usernameCheck, setUsernameCheck] = useState<{
+    loading: boolean;
+    available: boolean | null;
+    suggestions: string[];
+    message: string | null;
+  }>({
+    loading: false,
+    available: null,
+    suggestions: [],
+    message: null,
+  });
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -29,6 +47,7 @@ export const SetupPasswordPage: React.FC = () => {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // 1. Verify invitation token on mount
   useEffect(() => {
     if (!token) {
       setVerifying(false);
@@ -42,8 +61,19 @@ export const SetupPasswordPage: React.FC = () => {
         const res = await api.post<VerifySetupTokenResponse>('/auth/verify-setup-token', { token });
         setTokenData(res.data);
         setVerifyError(null);
+
+        // Auto-seed a suggested handle based on name or email prefix
+        const baseSeed = res.data.name
+          ? res.data.name.toLowerCase().replace(/[^a-z0-9]/g, '_')
+          : res.data.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '_');
+        if (baseSeed) {
+          setDesiredUsername(baseSeed);
+        }
       } catch (err: any) {
-        const msg = err.response?.data?.detail?.message || err.response?.data?.detail || 'This setup link is invalid or has expired.';
+        const msg =
+          err.response?.data?.detail?.message ||
+          err.response?.data?.detail ||
+          'This setup link is invalid or has expired.';
         setVerifyError(typeof msg === 'string' ? msg : JSON.stringify(msg));
       } finally {
         setVerifying(false);
@@ -53,9 +83,58 @@ export const SetupPasswordPage: React.FC = () => {
     checkToken();
   }, [token]);
 
+  // 2. Debounced live availability check against database
+  useEffect(() => {
+    const cleanUsername = desiredUsername.trim().toLowerCase();
+    if (!cleanUsername || cleanUsername.length < 3) {
+      setUsernameCheck({
+        loading: false,
+        available: null,
+        suggestions: [],
+        message: cleanUsername.length > 0 ? 'Username must be at least 3 characters' : null,
+      });
+      return;
+    }
+
+    setUsernameCheck((prev) => ({ ...prev, loading: true }));
+    const timer = setTimeout(async () => {
+      try {
+        const res = await api.get<CheckUsernameResponse>(
+          `/auth/check-username?username=${encodeURIComponent(cleanUsername)}`
+        );
+        setUsernameCheck({
+          loading: false,
+          available: res.data.available,
+          suggestions: res.data.suggestions || [],
+          message: res.data.message,
+        });
+      } catch {
+        setUsernameCheck({
+          loading: false,
+          available: null,
+          suggestions: [],
+          message: 'Unable to verify handle availability right now.',
+        });
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [desiredUsername]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
+
+    const cleanUsername = desiredUsername.trim().toLowerCase();
+    if (!cleanUsername || cleanUsername.length < 3) {
+      setFormError('Please choose a valid username of at least 3 characters.');
+      return;
+    }
+
+    if (usernameCheck.available === false) {
+      setFormError('The chosen username is already taken. Please choose another or click one of the suggested usernames.');
+      return;
+    }
 
     if (password.length < 6) {
       setFormError('Password must be at least 6 characters long.');
@@ -71,11 +150,15 @@ export const SetupPasswordPage: React.FC = () => {
       setSubmitting(true);
       await api.post<CompleteSetupResponse>('/auth/complete-setup', {
         token,
+        username: cleanUsername,
         password,
       });
       setIsSuccess(true);
     } catch (err: any) {
-      const msg = err.response?.data?.detail?.message || err.response?.data?.detail || 'Failed to complete password setup.';
+      const msg =
+        err.response?.data?.detail?.message ||
+        err.response?.data?.detail ||
+        'Failed to complete account activation.';
       setFormError(typeof msg === 'string' ? msg : JSON.stringify(msg));
     } finally {
       setSubmitting(false);
@@ -125,7 +208,7 @@ export const SetupPasswordPage: React.FC = () => {
         className="animate-fade-in"
         style={{
           width: '100%',
-          maxWidth: '480px',
+          maxWidth: '500px',
           backgroundColor: '#ffffff',
           borderRadius: '28px',
           boxShadow: '0 25px 60px -15px rgba(84, 52, 136, 0.25)',
@@ -163,7 +246,7 @@ export const SetupPasswordPage: React.FC = () => {
             Activate Your Account
           </h1>
           <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.85)', margin: 0 }}>
-            Set your secure studio password to complete email verification
+            Choose your unique username handle and set your studio password
           </p>
         </div>
 
@@ -241,10 +324,10 @@ export const SetupPasswordPage: React.FC = () => {
                   fontFamily: 'var(--font-heading)',
                 }}
               >
-                Password Set Successfully! 🎉
+                Account Activated! 🎉
               </h2>
               <p style={{ fontSize: '14px', color: 'rgba(84, 52, 136, 0.8)', lineHeight: 1.6, marginBottom: '28px' }}>
-                Your email address is verified and your studio account is fully active. You can now log in.
+                Your username <strong>@{desiredUsername.trim().toLowerCase()}</strong> and password are saved. You can now log in using either your email or handle.
               </p>
               <button
                 onClick={() => navigate('/login')}
@@ -266,7 +349,7 @@ export const SetupPasswordPage: React.FC = () => {
 
           {/* ACTIVE FORM STATE */}
           {!verifying && !verifyError && !isSuccess && tokenData && (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {/* Account Info Pill */}
               <div
                 style={{
@@ -281,7 +364,7 @@ export const SetupPasswordPage: React.FC = () => {
               >
                 <div>
                   <div style={{ fontSize: '11px', color: 'rgba(84, 52, 136, 0.65)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Setting Password For
+                    Activating Account For
                   </div>
                   <div style={{ fontSize: '15px', fontWeight: 800, color: '#543488', fontFamily: 'var(--font-heading)' }}>
                     {tokenData.name ? tokenData.name : tokenData.email}
@@ -327,18 +410,131 @@ export const SetupPasswordPage: React.FC = () => {
                 </div>
               )}
 
+              {/* Unique Handle (@Username) with Live DB Check */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <label
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: 800,
+                      color: '#543488',
+                      display: 'block',
+                      fontFamily: 'var(--font-heading)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.04em',
+                    }}
+                  >
+                    Choose Your Handle (@username) *
+                  </label>
+                  {usernameCheck.loading ? (
+                    <span style={{ fontSize: '11px', color: '#543488', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
+                      <RefreshCw size={11} className="spin" /> Checking DB...
+                    </span>
+                  ) : usernameCheck.available === true ? (
+                    <span style={{ fontSize: '11px', color: '#059669', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 800 }}>
+                      <Check size={13} strokeWidth={3} /> Available in DB
+                    </span>
+                  ) : usernameCheck.available === false ? (
+                    <span style={{ fontSize: '11px', color: '#e11d48', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 800 }}>
+                      <X size={13} strokeWidth={3} /> Username Taken
+                    </span>
+                  ) : null}
+                </div>
+
+                <div style={{ position: 'relative' }}>
+                  <span
+                    style={{
+                      position: 'absolute',
+                      left: '14px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: '#543488',
+                      fontWeight: 800,
+                      fontSize: '15px',
+                    }}
+                  >
+                    @
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    placeholder="your_handle"
+                    value={desiredUsername}
+                    onChange={(e) => setDesiredUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_\-\.]/g, ''))}
+                    className="input-field"
+                    style={{
+                      paddingLeft: '34px',
+                      width: '100%',
+                      height: '46px',
+                      borderRadius: '14px',
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      border: `2px solid ${
+                        usernameCheck.available === true
+                          ? '#059669'
+                          : usernameCheck.available === false
+                          ? '#e11d48'
+                          : 'rgba(84, 52, 136, 0.2)'
+                      }`,
+                    }}
+                  />
+                </div>
+
+                {/* Suggestions Chip Row */}
+                {usernameCheck.suggestions && usernameCheck.suggestions.length > 0 && (
+                  <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                    <span style={{ fontSize: '11px', color: 'rgba(84, 52, 136, 0.7)', fontWeight: 700 }}>
+                      Available suggestions:
+                    </span>
+                    {usernameCheck.suggestions.map((sug) => (
+                      <button
+                        key={sug}
+                        type="button"
+                        onClick={() => setDesiredUsername(sug)}
+                        style={{
+                          padding: '2px 8px',
+                          borderRadius: '6px',
+                          backgroundColor: 'rgba(84, 52, 136, 0.08)',
+                          border: '1px solid rgba(84, 52, 136, 0.2)',
+                          color: '#543488',
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          fontFamily: 'monospace',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#543488';
+                          e.currentTarget.style.color = '#ffffff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(84, 52, 136, 0.08)';
+                          e.currentTarget.style.color = '#543488';
+                        }}
+                        title={`Select @${sug}`}
+                      >
+                        @{sug}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Password */}
               <div>
                 <label
                   style={{
-                    fontSize: '13px',
+                    fontSize: '12px',
                     fontWeight: 800,
                     color: '#543488',
-                    marginBottom: '8px',
+                    marginBottom: '6px',
                     display: 'block',
                     fontFamily: 'var(--font-heading)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
                   }}
                 >
-                  Create New Password (min. 6 characters) *
+                  Create Password (min. 6 characters) *
                 </label>
                 <div style={{ position: 'relative' }}>
                   <input
@@ -350,7 +546,7 @@ export const SetupPasswordPage: React.FC = () => {
                     className="input-field"
                     style={{
                       width: '100%',
-                      height: '48px',
+                      height: '46px',
                       borderRadius: '14px',
                       fontSize: '15px',
                       paddingRight: '48px',
@@ -377,18 +573,21 @@ export const SetupPasswordPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Confirm Password */}
               <div>
                 <label
                   style={{
-                    fontSize: '13px',
+                    fontSize: '12px',
                     fontWeight: 800,
                     color: '#543488',
-                    marginBottom: '8px',
+                    marginBottom: '6px',
                     display: 'block',
                     fontFamily: 'var(--font-heading)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
                   }}
                 >
-                  Confirm New Password *
+                  Confirm Password *
                 </label>
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -399,7 +598,7 @@ export const SetupPasswordPage: React.FC = () => {
                   className="input-field"
                   style={{
                     width: '100%',
-                    height: '48px',
+                    height: '46px',
                     borderRadius: '14px',
                     fontSize: '15px',
                     border: '2px solid rgba(84, 52, 136, 0.2)',
@@ -409,7 +608,7 @@ export const SetupPasswordPage: React.FC = () => {
 
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={submitting || usernameCheck.available === false}
                 className="btn-peblo-primary"
                 style={{
                   width: '100%',
@@ -419,16 +618,18 @@ export const SetupPasswordPage: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '10px',
-                  marginTop: '8px',
+                  marginTop: '6px',
+                  opacity: submitting || usernameCheck.available === false ? 0.7 : 1,
+                  cursor: submitting || usernameCheck.available === false ? 'not-allowed' : 'pointer',
                 }}
               >
                 {submitting ? (
                   <>
-                    <RefreshCw size={18} className="spin" /> Verifying & Saving...
+                    <RefreshCw size={18} className="spin" /> Activating Account...
                   </>
                 ) : (
                   <>
-                    <ShieldCheck size={18} /> Verify Email & Set Password
+                    <ShieldCheck size={18} /> Activate Account & Set Password
                   </>
                 )}
               </button>

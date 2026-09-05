@@ -1,24 +1,24 @@
 {
-  "published_at": "2026-09-05T19:35:59.633327+00:00",
+  "published_at": "2026-09-05T20:39:44.994096+00:00",
   "sections": [
     {
       "name": "featured",
       "shows": [
         {
-          "id": 79,
+          "id": 130,
           "title": "Moti's Many Lives",
           "synopsis": "Moti the dog is reborn across India, making new friends in every state.",
           "section": "featured",
           "category": "adventure, india, friendship",
           "artwork": {
-            "poster": "/uploads/1fb53f6f002c473ab8b735c27730cf3d.webp",
+            "poster": "/uploads/poster_good.jpg",
             "banner": "/uploads/banner_good.jpg"
           },
-          "poster_url": "/uploads/1fb53f6f002c473ab8b735c27730cf3d.webp",
+          "poster_url": "/uploads/poster_good.jpg",
           "banner_url": "/uploads/banner_good.jpg",
           "trailers": [
             {
-              "id": 224,
+              "id": 421,
               "title": "Trailer",
               "description": "Trailer - Moti's Many Lives (en)",
               "duration": 75,
@@ -33,17 +33,17 @@
           ],
           "seasons": [
             {
-              "id": 77,
+              "id": 111,
               "season_number": 1,
               "title": "Season 1",
               "episodes": [
                 {
-                  "id": 225,
+                  "id": 423,
                   "content_group": "motis-many-lives-s01e01",
                   "episode_number": 1,
                   "title": "The Lost Kite",
-                  "description": "The Lost Kite - Moti's Many Lives (en)",
-                  "duration": 510,
+                  "description": "The Lost Kite - Moti's Many Lives (hi)",
+                  "duration": 480,
                   "languages": [
                     "en",
                     "hi"
@@ -54,12 +54,12 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 227,
+                  "id": 425,
                   "content_group": "motis-many-lives-s01e02",
                   "episode_number": 2,
                   "title": "Rain on the Roof",
-                  "description": "Rain on the Roof - Moti's Many Lives (en)",
-                  "duration": 540,
+                  "description": "Rain on the Roof - Moti's Many Lives (hi)",
+                  "duration": 660,
                   "languages": [
                     "en",
                     "hi"
@@ -70,7 +70,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 241,
+                  "id": 438,
                   "content_group": "motis-many-lives-s01e02-v2",
                   "episode_number": 2,
                   "title": "The Lost Kite (v2)",
@@ -85,7 +85,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 230,
+                  "id": 427,
                   "content_group": "motis-many-lives-s01e03",
                   "episode_number": 3,
                   "title": "A Bridge of Stones",
@@ -101,7 +101,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 232,
+                  "id": 429,
                   "content_group": "motis-many-lives-s01e04",
                   "episode_number": 4,
                   "title": "The Midnight Market",
@@ -117,7 +117,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 234,
+                  "id": 431,
                   "content_group": "motis-many-lives-s01e05",
                   "episode_number": 5,
                   "title": "Footprints in Flour",
@@ -133,7 +133,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 236,
+                  "id": 433,
                   "content_group": "motis-many-lives-s01e06",
                   "episode_number": 6,
                   "title": "The Whistling Well",
@@ -149,7 +149,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 237,
+                  "id": 434,
                   "content_group": "motis-many-lives-s01e07",
                   "episode_number": 7,
                   "title": "Grandmother's Map",
@@ -164,7 +164,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 238,
+                  "id": 435,
                   "content_group": "motis-many-lives-s01e08",
                   "episode_number": 8,
                   "title": "The Runaway Cart",
@@ -179,7 +179,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 239,
+                  "id": 436,
                   "content_group": "motis-many-lives-s01e09",
                   "episode_number": 9,
                   "title": "Songs of the Sea",
@@ -194,7 +194,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 240,
+                  "id": 437,
                   "content_group": "motis-many-lives-s01e10",
                   "episode_number": 10,
                   "title": "The Paper Boat",
@@ -223,7 +223,7 @@
       "name": "minisodes",
       "shows": [
         {
-          "id": 81,
+          "id": 132,
           "title": "Discover India with Moti",
           "synopsis": "Quick hops across Indian states with Moti as your guide.",
           "section": "minisodes",
@@ -237,12 +237,12 @@
           "trailers": [],
           "seasons": [
             {
-              "id": 80,
+              "id": 114,
               "season_number": 1,
               "title": "Season 1",
               "episodes": [
                 {
-                  "id": 259,
+                  "id": 456,
                   "content_group": "discover-india-with-moti-s01e01",
                   "episode_number": 1,
                   "title": "The Lost Kite",
@@ -257,7 +257,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 260,
+                  "id": 457,
                   "content_group": "discover-india-with-moti-s01e02",
                   "episode_number": 2,
                   "title": "Rain on the Roof",
@@ -272,7 +272,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 261,
+                  "id": 458,
                   "content_group": "discover-india-with-moti-s01e03",
                   "episode_number": 3,
                   "title": "A Bridge of Stones",
@@ -287,7 +287,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 262,
+                  "id": 459,
                   "content_group": "discover-india-with-moti-s01e04",
                   "episode_number": 4,
                   "title": "The Midnight Market",
@@ -302,7 +302,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 263,
+                  "id": 460,
                   "content_group": "discover-india-with-moti-s01e05",
                   "episode_number": 5,
                   "title": "Footprints in Flour",
@@ -317,7 +317,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 264,
+                  "id": 461,
                   "content_group": "discover-india-with-moti-s01e06",
                   "episode_number": 6,
                   "title": "The Whistling Well",
@@ -332,7 +332,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 265,
+                  "id": 462,
                   "content_group": "discover-india-with-moti-s01e07",
                   "episode_number": 7,
                   "title": "Grandmother's Map",
@@ -347,7 +347,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 266,
+                  "id": 463,
                   "content_group": "discover-india-with-moti-s01e08",
                   "episode_number": 8,
                   "title": "The Runaway Cart",
@@ -362,7 +362,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 267,
+                  "id": 464,
                   "content_group": "discover-india-with-moti-s01e09",
                   "episode_number": 9,
                   "title": "Songs of the Sea",
@@ -377,7 +377,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 268,
+                  "id": 465,
                   "content_group": "discover-india-with-moti-s01e10",
                   "episode_number": 10,
                   "title": "The Paper Boat",
@@ -405,7 +405,7 @@
       "name": "series",
       "shows": [
         {
-          "id": 84,
+          "id": 135,
           "title": "Curious Cubs",
           "synopsis": "Two cubs ask big questions about the natural world.",
           "section": "series",
@@ -419,12 +419,12 @@
           "trailers": [],
           "seasons": [
             {
-              "id": 83,
+              "id": 117,
               "season_number": 1,
               "title": "Season 1",
               "episodes": [
                 {
-                  "id": 295,
+                  "id": 492,
                   "content_group": "curious-cubs-s01e01",
                   "episode_number": 1,
                   "title": "The Lost Kite",
@@ -439,7 +439,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 296,
+                  "id": 493,
                   "content_group": "curious-cubs-s01e02",
                   "episode_number": 2,
                   "title": "Rain on the Roof",
@@ -454,7 +454,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 297,
+                  "id": 494,
                   "content_group": "curious-cubs-s01e03",
                   "episode_number": 3,
                   "title": "A BRIDGE OF STONES",
@@ -469,7 +469,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 298,
+                  "id": 495,
                   "content_group": "curious-cubs-s01e04",
                   "episode_number": 4,
                   "title": "The Midnight Market",
@@ -484,7 +484,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 299,
+                  "id": 496,
                   "content_group": "curious-cubs-s01e05",
                   "episode_number": 5,
                   "title": "Footprints in Flour",
@@ -499,7 +499,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 300,
+                  "id": 497,
                   "content_group": "curious-cubs-s01e06",
                   "episode_number": 6,
                   "title": "The Whistling Well",
@@ -514,7 +514,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 301,
+                  "id": 498,
                   "content_group": "curious-cubs-s01e07",
                   "episode_number": 7,
                   "title": "Grandmother's Map",
@@ -529,7 +529,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 302,
+                  "id": 499,
                   "content_group": "curious-cubs-s01e08",
                   "episode_number": 8,
                   "title": "The Runaway Cart",
@@ -552,7 +552,7 @@
           "total_episodes": 8
         },
         {
-          "id": 85,
+          "id": 136,
           "title": "Number Nest",
           "synopsis": "Playful stories that sneak in early number sense.",
           "section": "series",
@@ -566,12 +566,12 @@
           "trailers": [],
           "seasons": [
             {
-              "id": 84,
+              "id": 118,
               "season_number": 1,
               "title": "Season 1",
               "episodes": [
                 {
-                  "id": 303,
+                  "id": 500,
                   "content_group": "number-nest-s01e01",
                   "episode_number": 1,
                   "title": "The Lost Kite",
@@ -586,7 +586,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 304,
+                  "id": 501,
                   "content_group": "number-nest-s01e02",
                   "episode_number": 2,
                   "title": "rain on the roof",
@@ -601,7 +601,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 305,
+                  "id": 502,
                   "content_group": "number-nest-s01e03",
                   "episode_number": 3,
                   "title": "A Bridge of Stones",
@@ -616,7 +616,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 306,
+                  "id": 503,
                   "content_group": "number-nest-s01e04",
                   "episode_number": 4,
                   "title": "The Midnight Market",
@@ -631,7 +631,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 307,
+                  "id": 504,
                   "content_group": "number-nest-s01e05",
                   "episode_number": 5,
                   "title": "Footprints in Flour",
@@ -646,7 +646,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 308,
+                  "id": 505,
                   "content_group": "number-nest-s01e06",
                   "episode_number": 6,
                   "title": "The Whistling Well",
@@ -669,154 +669,7 @@
           "total_episodes": 6
         },
         {
-          "id": 86,
-          "title": "Rhyme Rangers",
-          "synopsis": "A band of friends who solve problems in rhyme.",
-          "section": "series",
-          "category": "music, language",
-          "artwork": {
-            "poster": "/uploads/poster_good.jpg",
-            "banner": "/uploads/banner_good.jpg"
-          },
-          "poster_url": "/uploads/poster_good.jpg",
-          "banner_url": "/uploads/banner_good.jpg",
-          "trailers": [],
-          "seasons": [
-            {
-              "id": 85,
-              "season_number": 1,
-              "title": "Season 1",
-              "episodes": [
-                {
-                  "id": 311,
-                  "content_group": "rhyme-rangers-s01e01",
-                  "episode_number": 1,
-                  "title": "The Lost Kite",
-                  "description": "The Lost Kite - Rhyme Rangers (en)",
-                  "duration": 510,
-                  "languages": [
-                    "en"
-                  ],
-                  "artwork": {
-                    "thumbnail": "/uploads/thumb_good.jpg"
-                  },
-                  "thumbnail_url": "/uploads/thumb_good.jpg"
-                },
-                {
-                  "id": 312,
-                  "content_group": "rhyme-rangers-s01e02",
-                  "episode_number": 2,
-                  "title": "Rain on the Roof",
-                  "description": "Rain on the Roof - Rhyme Rangers (en)",
-                  "duration": 600,
-                  "languages": [
-                    "en"
-                  ],
-                  "artwork": {
-                    "thumbnail": "/uploads/thumb_good.jpg"
-                  },
-                  "thumbnail_url": "/uploads/thumb_good.jpg"
-                },
-                {
-                  "id": 313,
-                  "content_group": "rhyme-rangers-s01e03",
-                  "episode_number": 3,
-                  "title": "A Bridge of Stones",
-                  "description": "A Bridge of Stones - Rhyme Rangers (en)",
-                  "duration": 420,
-                  "languages": [
-                    "en"
-                  ],
-                  "artwork": {
-                    "thumbnail": "/uploads/thumb_good.jpg"
-                  },
-                  "thumbnail_url": "/uploads/thumb_good.jpg"
-                },
-                {
-                  "id": 314,
-                  "content_group": "rhyme-rangers-s01e04",
-                  "episode_number": 4,
-                  "title": "The Midnight Market",
-                  "description": "The Midnight Market - Rhyme Rangers (en)",
-                  "duration": 420,
-                  "languages": [
-                    "en"
-                  ],
-                  "artwork": {
-                    "thumbnail": "/uploads/thumb_good.jpg"
-                  },
-                  "thumbnail_url": "/uploads/thumb_good.jpg"
-                },
-                {
-                  "id": 315,
-                  "content_group": "rhyme-rangers-s01e05",
-                  "episode_number": 5,
-                  "title": "Footprints in Flour",
-                  "description": "Footprints in Flour - Rhyme Rangers (en)",
-                  "duration": 600,
-                  "languages": [
-                    "en"
-                  ],
-                  "artwork": {
-                    "thumbnail": "/uploads/thumb_good.jpg"
-                  },
-                  "thumbnail_url": "/uploads/thumb_good.jpg"
-                },
-                {
-                  "id": 316,
-                  "content_group": "rhyme-rangers-s01e06",
-                  "episode_number": 6,
-                  "title": "The Whistling Well",
-                  "description": "The Whistling Well - Rhyme Rangers (en)",
-                  "duration": 540,
-                  "languages": [
-                    "en"
-                  ],
-                  "artwork": {
-                    "thumbnail": "/uploads/thumb_good.jpg"
-                  },
-                  "thumbnail_url": "/uploads/thumb_good.jpg"
-                },
-                {
-                  "id": 317,
-                  "content_group": "rhyme-rangers-s01e07",
-                  "episode_number": 7,
-                  "title": "Grandmother's Map",
-                  "description": "Grandmother's Map - Rhyme Rangers (en)",
-                  "duration": 480,
-                  "languages": [
-                    "en"
-                  ],
-                  "artwork": {
-                    "thumbnail": "/uploads/thumb_good.jpg"
-                  },
-                  "thumbnail_url": "/uploads/thumb_good.jpg"
-                },
-                {
-                  "id": 318,
-                  "content_group": "rhyme-rangers-s01e08",
-                  "episode_number": 8,
-                  "title": "The Runaway Cart",
-                  "description": "The Runaway Cart - Rhyme Rangers (en)",
-                  "duration": 510,
-                  "languages": [
-                    "en"
-                  ],
-                  "artwork": {
-                    "thumbnail": "/uploads/thumb_good.jpg"
-                  },
-                  "thumbnail_url": "/uploads/thumb_good.jpg"
-                }
-              ]
-            }
-          ],
-          "available_languages": [
-            "en"
-          ],
-          "total_episodes": 8
-        },
-        {
-          "id": 80,
+          "id": 131,
           "title": "Tiny Tales by Banyan Dadi",
           "synopsis": "Banyan Dadi tells short bedtime tales under the old banyan tree.",
           "section": "series",
@@ -829,7 +682,7 @@
           "banner_url": "/uploads/banner_good.jpg",
           "trailers": [
             {
-              "id": 242,
+              "id": 439,
               "title": "Trailer",
               "description": "Trailer - Tiny Tales by Banyan Dadi (en)",
               "duration": 75,
@@ -844,12 +697,12 @@
           ],
           "seasons": [
             {
-              "id": 79,
+              "id": 113,
               "season_number": 1,
               "title": "Season 1",
               "episodes": [
                 {
-                  "id": 243,
+                  "id": 440,
                   "content_group": "tiny-tales-banyan-dadi-s01e01",
                   "episode_number": 1,
                   "title": "The Lost Kite",
@@ -865,7 +718,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 245,
+                  "id": 442,
                   "content_group": "tiny-tales-banyan-dadi-s01e02",
                   "episode_number": 2,
                   "title": "Rain on the Roof",
@@ -881,7 +734,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 247,
+                  "id": 444,
                   "content_group": "tiny-tales-banyan-dadi-s01e03",
                   "episode_number": 3,
                   "title": "A Bridge of Stones",
@@ -897,7 +750,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 249,
+                  "id": 446,
                   "content_group": "tiny-tales-banyan-dadi-s01e04",
                   "episode_number": 4,
                   "title": "The Midnight Market",
@@ -913,7 +766,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 251,
+                  "id": 448,
                   "content_group": "tiny-tales-banyan-dadi-s01e05",
                   "episode_number": 5,
                   "title": "Footprints in Flour",
@@ -929,7 +782,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 253,
+                  "id": 450,
                   "content_group": "tiny-tales-banyan-dadi-s01e06",
                   "episode_number": 6,
                   "title": "The Whistling Well",
@@ -945,7 +798,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 255,
+                  "id": 452,
                   "content_group": "tiny-tales-banyan-dadi-s01e07",
                   "episode_number": 7,
                   "title": "Grandmother's Map",
@@ -960,7 +813,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 256,
+                  "id": 453,
                   "content_group": "tiny-tales-banyan-dadi-s01e08",
                   "episode_number": 8,
                   "title": "The Runaway Cart",
@@ -975,7 +828,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 257,
+                  "id": 454,
                   "content_group": "tiny-tales-banyan-dadi-s01e09",
                   "episode_number": 9,
                   "title": "Songs of the Sea",
@@ -990,7 +843,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 258,
+                  "id": 455,
                   "content_group": "tiny-tales-banyan-dadi-s01e10",
                   "episode_number": 10,
                   "title": "The Paper Boat",
@@ -1019,7 +872,7 @@
       "name": "songs",
       "shows": [
         {
-          "id": 82,
+          "id": 133,
           "title": "Peblo Songs",
           "synopsis": "Catchy singalongs for little learners.",
           "section": "songs",
@@ -1033,12 +886,12 @@
           "trailers": [],
           "seasons": [
             {
-              "id": 81,
+              "id": 115,
               "season_number": 1,
               "title": "Season 1",
               "episodes": [
                 {
-                  "id": 269,
+                  "id": 466,
                   "content_group": "peblo-songs-s01e01",
                   "episode_number": 1,
                   "title": "The Lost Kite",
@@ -1054,7 +907,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 271,
+                  "id": 468,
                   "content_group": "peblo-songs-s01e02",
                   "episode_number": 2,
                   "title": "Rain on the Roof",
@@ -1070,7 +923,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 273,
+                  "id": 470,
                   "content_group": "peblo-songs-s01e03",
                   "episode_number": 3,
                   "title": "A Bridge of Stones",
@@ -1086,7 +939,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 275,
+                  "id": 472,
                   "content_group": "peblo-songs-s01e04",
                   "episode_number": 4,
                   "title": "The Midnight Market",
@@ -1102,7 +955,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 277,
+                  "id": 474,
                   "content_group": "peblo-songs-s01e05",
                   "episode_number": 5,
                   "title": "Footprints in Flour",
@@ -1118,7 +971,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 279,
+                  "id": 476,
                   "content_group": "peblo-songs-s01e06",
                   "episode_number": 6,
                   "title": "The Whistling Well",
@@ -1134,7 +987,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 281,
+                  "id": 478,
                   "content_group": "peblo-songs-s01e07",
                   "episode_number": 7,
                   "title": "Grandmother's Map",
@@ -1149,7 +1002,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 282,
+                  "id": 479,
                   "content_group": "peblo-songs-s01e08",
                   "episode_number": 8,
                   "title": "The Runaway Cart",
@@ -1164,7 +1017,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 283,
+                  "id": 480,
                   "content_group": "peblo-songs-s01e09",
                   "episode_number": 9,
                   "title": "Songs of the Sea",
@@ -1179,7 +1032,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 284,
+                  "id": 481,
                   "content_group": "peblo-songs-s01e10",
                   "episode_number": 10,
                   "title": "The Paper Boat",
@@ -1203,7 +1056,7 @@
           "total_episodes": 10
         },
         {
-          "id": 83,
+          "id": 134,
           "title": "Peblo Songs — Lyrical",
           "synopsis": "The same songs with words on screen to read along.",
           "section": "songs",
@@ -1217,12 +1070,12 @@
           "trailers": [],
           "seasons": [
             {
-              "id": 82,
+              "id": 116,
               "season_number": 1,
               "title": "Season 1",
               "episodes": [
                 {
-                  "id": 285,
+                  "id": 482,
                   "content_group": "peblo-songs-lyrical-s01e01",
                   "episode_number": 1,
                   "title": "The Lost Kite",
@@ -1237,7 +1090,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 286,
+                  "id": 483,
                   "content_group": "peblo-songs-lyrical-s01e02",
                   "episode_number": 2,
                   "title": "Rain on the Roof",
@@ -1252,7 +1105,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 287,
+                  "id": 484,
                   "content_group": "peblo-songs-lyrical-s01e03",
                   "episode_number": 3,
                   "title": "A Bridge of Stones",
@@ -1267,7 +1120,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 288,
+                  "id": 485,
                   "content_group": "peblo-songs-lyrical-s01e04",
                   "episode_number": 4,
                   "title": "The Midnight Market",
@@ -1282,7 +1135,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 289,
+                  "id": 486,
                   "content_group": "peblo-songs-lyrical-s01e05",
                   "episode_number": 5,
                   "title": "Footprints in Flour",
@@ -1297,7 +1150,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 290,
+                  "id": 487,
                   "content_group": "peblo-songs-lyrical-s01e06",
                   "episode_number": 6,
                   "title": "The Whistling Well",
@@ -1312,7 +1165,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 291,
+                  "id": 488,
                   "content_group": "peblo-songs-lyrical-s01e07",
                   "episode_number": 7,
                   "title": "Grandmother's Map",
@@ -1327,7 +1180,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 292,
+                  "id": 489,
                   "content_group": "peblo-songs-lyrical-s01e08",
                   "episode_number": 8,
                   "title": "The Runaway Cart",
@@ -1342,7 +1195,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 293,
+                  "id": 490,
                   "content_group": "peblo-songs-lyrical-s01e09",
                   "episode_number": 9,
                   "title": "Songs of the Sea",
@@ -1357,7 +1210,7 @@
                   "thumbnail_url": "/uploads/thumb_good.jpg"
                 },
                 {
-                  "id": 294,
+                  "id": 491,
                   "content_group": "peblo-songs-lyrical-s01e10",
                   "episode_number": 10,
                   "title": "The Paper Boat",
@@ -1410,20 +1263,20 @@
     "hi"
   ],
   "featured_show": {
-    "id": 79,
+    "id": 130,
     "title": "Moti's Many Lives",
     "synopsis": "Moti the dog is reborn across India, making new friends in every state.",
     "section": "featured",
     "category": "adventure, india, friendship",
     "artwork": {
-      "poster": "/uploads/1fb53f6f002c473ab8b735c27730cf3d.webp",
+      "poster": "/uploads/poster_good.jpg",
       "banner": "/uploads/banner_good.jpg"
     },
-    "poster_url": "/uploads/1fb53f6f002c473ab8b735c27730cf3d.webp",
+    "poster_url": "/uploads/poster_good.jpg",
     "banner_url": "/uploads/banner_good.jpg",
     "trailers": [
       {
-        "id": 224,
+        "id": 421,
         "title": "Trailer",
         "description": "Trailer - Moti's Many Lives (en)",
         "duration": 75,
@@ -1438,17 +1291,17 @@
     ],
     "seasons": [
       {
-        "id": 77,
+        "id": 111,
         "season_number": 1,
         "title": "Season 1",
         "episodes": [
           {
-            "id": 225,
+            "id": 423,
             "content_group": "motis-many-lives-s01e01",
             "episode_number": 1,
             "title": "The Lost Kite",
-            "description": "The Lost Kite - Moti's Many Lives (en)",
-            "duration": 510,
+            "description": "The Lost Kite - Moti's Many Lives (hi)",
+            "duration": 480,
             "languages": [
               "en",
               "hi"
@@ -1459,12 +1312,12 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 227,
+            "id": 425,
             "content_group": "motis-many-lives-s01e02",
             "episode_number": 2,
             "title": "Rain on the Roof",
-            "description": "Rain on the Roof - Moti's Many Lives (en)",
-            "duration": 540,
+            "description": "Rain on the Roof - Moti's Many Lives (hi)",
+            "duration": 660,
             "languages": [
               "en",
               "hi"
@@ -1475,7 +1328,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 241,
+            "id": 438,
             "content_group": "motis-many-lives-s01e02-v2",
             "episode_number": 2,
             "title": "The Lost Kite (v2)",
@@ -1490,7 +1343,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 230,
+            "id": 427,
             "content_group": "motis-many-lives-s01e03",
             "episode_number": 3,
             "title": "A Bridge of Stones",
@@ -1506,7 +1359,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 232,
+            "id": 429,
             "content_group": "motis-many-lives-s01e04",
             "episode_number": 4,
             "title": "The Midnight Market",
@@ -1522,7 +1375,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 234,
+            "id": 431,
             "content_group": "motis-many-lives-s01e05",
             "episode_number": 5,
             "title": "Footprints in Flour",
@@ -1538,7 +1391,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 236,
+            "id": 433,
             "content_group": "motis-many-lives-s01e06",
             "episode_number": 6,
             "title": "The Whistling Well",
@@ -1554,7 +1407,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 237,
+            "id": 434,
             "content_group": "motis-many-lives-s01e07",
             "episode_number": 7,
             "title": "Grandmother's Map",
@@ -1569,7 +1422,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 238,
+            "id": 435,
             "content_group": "motis-many-lives-s01e08",
             "episode_number": 8,
             "title": "The Runaway Cart",
@@ -1584,7 +1437,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 239,
+            "id": 436,
             "content_group": "motis-many-lives-s01e09",
             "episode_number": 9,
             "title": "Songs of the Sea",
@@ -1599,7 +1452,7 @@
             "thumbnail_url": "/uploads/thumb_good.jpg"
           },
           {
-            "id": 240,
+            "id": 437,
             "content_group": "motis-many-lives-s01e10",
             "episode_number": 10,
             "title": "The Paper Boat",
@@ -1624,20 +1477,20 @@
   },
   "all_shows": [
     {
-      "id": 79,
+      "id": 130,
       "title": "Moti's Many Lives",
       "synopsis": "Moti the dog is reborn across India, making new friends in every state.",
       "section": "featured",
       "category": "adventure, india, friendship",
       "artwork": {
-        "poster": "/uploads/1fb53f6f002c473ab8b735c27730cf3d.webp",
+        "poster": "/uploads/poster_good.jpg",
         "banner": "/uploads/banner_good.jpg"
       },
-      "poster_url": "/uploads/1fb53f6f002c473ab8b735c27730cf3d.webp",
+      "poster_url": "/uploads/poster_good.jpg",
       "banner_url": "/uploads/banner_good.jpg",
       "trailers": [
         {
-          "id": 224,
+          "id": 421,
           "title": "Trailer",
           "description": "Trailer - Moti's Many Lives (en)",
           "duration": 75,
@@ -1652,17 +1505,17 @@
       ],
       "seasons": [
         {
-          "id": 77,
+          "id": 111,
           "season_number": 1,
           "title": "Season 1",
           "episodes": [
             {
-              "id": 225,
+              "id": 423,
               "content_group": "motis-many-lives-s01e01",
               "episode_number": 1,
               "title": "The Lost Kite",
-              "description": "The Lost Kite - Moti's Many Lives (en)",
-              "duration": 510,
+              "description": "The Lost Kite - Moti's Many Lives (hi)",
+              "duration": 480,
               "languages": [
                 "en",
                 "hi"
@@ -1673,12 +1526,12 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 227,
+              "id": 425,
               "content_group": "motis-many-lives-s01e02",
               "episode_number": 2,
               "title": "Rain on the Roof",
-              "description": "Rain on the Roof - Moti's Many Lives (en)",
-              "duration": 540,
+              "description": "Rain on the Roof - Moti's Many Lives (hi)",
+              "duration": 660,
               "languages": [
                 "en",
                 "hi"
@@ -1689,7 +1542,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 241,
+              "id": 438,
               "content_group": "motis-many-lives-s01e02-v2",
               "episode_number": 2,
               "title": "The Lost Kite (v2)",
@@ -1704,7 +1557,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 230,
+              "id": 427,
               "content_group": "motis-many-lives-s01e03",
               "episode_number": 3,
               "title": "A Bridge of Stones",
@@ -1720,7 +1573,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 232,
+              "id": 429,
               "content_group": "motis-many-lives-s01e04",
               "episode_number": 4,
               "title": "The Midnight Market",
@@ -1736,7 +1589,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 234,
+              "id": 431,
               "content_group": "motis-many-lives-s01e05",
               "episode_number": 5,
               "title": "Footprints in Flour",
@@ -1752,7 +1605,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 236,
+              "id": 433,
               "content_group": "motis-many-lives-s01e06",
               "episode_number": 6,
               "title": "The Whistling Well",
@@ -1768,7 +1621,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 237,
+              "id": 434,
               "content_group": "motis-many-lives-s01e07",
               "episode_number": 7,
               "title": "Grandmother's Map",
@@ -1783,7 +1636,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 238,
+              "id": 435,
               "content_group": "motis-many-lives-s01e08",
               "episode_number": 8,
               "title": "The Runaway Cart",
@@ -1798,7 +1651,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 239,
+              "id": 436,
               "content_group": "motis-many-lives-s01e09",
               "episode_number": 9,
               "title": "Songs of the Sea",
@@ -1813,7 +1666,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 240,
+              "id": 437,
               "content_group": "motis-many-lives-s01e10",
               "episode_number": 10,
               "title": "The Paper Boat",
@@ -1837,7 +1690,7 @@
       "total_episodes": 11
     },
     {
-      "id": 81,
+      "id": 132,
       "title": "Discover India with Moti",
       "synopsis": "Quick hops across Indian states with Moti as your guide.",
       "section": "minisodes",
@@ -1851,12 +1704,12 @@
       "trailers": [],
       "seasons": [
         {
-          "id": 80,
+          "id": 114,
           "season_number": 1,
           "title": "Season 1",
           "episodes": [
             {
-              "id": 259,
+              "id": 456,
               "content_group": "discover-india-with-moti-s01e01",
               "episode_number": 1,
               "title": "The Lost Kite",
@@ -1871,7 +1724,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 260,
+              "id": 457,
               "content_group": "discover-india-with-moti-s01e02",
               "episode_number": 2,
               "title": "Rain on the Roof",
@@ -1886,7 +1739,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 261,
+              "id": 458,
               "content_group": "discover-india-with-moti-s01e03",
               "episode_number": 3,
               "title": "A Bridge of Stones",
@@ -1901,7 +1754,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 262,
+              "id": 459,
               "content_group": "discover-india-with-moti-s01e04",
               "episode_number": 4,
               "title": "The Midnight Market",
@@ -1916,7 +1769,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 263,
+              "id": 460,
               "content_group": "discover-india-with-moti-s01e05",
               "episode_number": 5,
               "title": "Footprints in Flour",
@@ -1931,7 +1784,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 264,
+              "id": 461,
               "content_group": "discover-india-with-moti-s01e06",
               "episode_number": 6,
               "title": "The Whistling Well",
@@ -1946,7 +1799,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 265,
+              "id": 462,
               "content_group": "discover-india-with-moti-s01e07",
               "episode_number": 7,
               "title": "Grandmother's Map",
@@ -1961,7 +1814,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 266,
+              "id": 463,
               "content_group": "discover-india-with-moti-s01e08",
               "episode_number": 8,
               "title": "The Runaway Cart",
@@ -1976,7 +1829,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 267,
+              "id": 464,
               "content_group": "discover-india-with-moti-s01e09",
               "episode_number": 9,
               "title": "Songs of the Sea",
@@ -1991,7 +1844,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 268,
+              "id": 465,
               "content_group": "discover-india-with-moti-s01e10",
               "episode_number": 10,
               "title": "The Paper Boat",
@@ -2014,7 +1867,7 @@
       "total_episodes": 10
     },
     {
-      "id": 84,
+      "id": 135,
       "title": "Curious Cubs",
       "synopsis": "Two cubs ask big questions about the natural world.",
       "section": "series",
@@ -2028,12 +1881,12 @@
       "trailers": [],
       "seasons": [
         {
-          "id": 83,
+          "id": 117,
           "season_number": 1,
           "title": "Season 1",
           "episodes": [
             {
-              "id": 295,
+              "id": 492,
               "content_group": "curious-cubs-s01e01",
               "episode_number": 1,
               "title": "The Lost Kite",
@@ -2048,7 +1901,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 296,
+              "id": 493,
               "content_group": "curious-cubs-s01e02",
               "episode_number": 2,
               "title": "Rain on the Roof",
@@ -2063,7 +1916,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 297,
+              "id": 494,
               "content_group": "curious-cubs-s01e03",
               "episode_number": 3,
               "title": "A BRIDGE OF STONES",
@@ -2078,7 +1931,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 298,
+              "id": 495,
               "content_group": "curious-cubs-s01e04",
               "episode_number": 4,
               "title": "The Midnight Market",
@@ -2093,7 +1946,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 299,
+              "id": 496,
               "content_group": "curious-cubs-s01e05",
               "episode_number": 5,
               "title": "Footprints in Flour",
@@ -2108,7 +1961,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 300,
+              "id": 497,
               "content_group": "curious-cubs-s01e06",
               "episode_number": 6,
               "title": "The Whistling Well",
@@ -2123,7 +1976,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 301,
+              "id": 498,
               "content_group": "curious-cubs-s01e07",
               "episode_number": 7,
               "title": "Grandmother's Map",
@@ -2138,7 +1991,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 302,
+              "id": 499,
               "content_group": "curious-cubs-s01e08",
               "episode_number": 8,
               "title": "The Runaway Cart",
@@ -2161,7 +2014,7 @@
       "total_episodes": 8
     },
     {
-      "id": 85,
+      "id": 136,
       "title": "Number Nest",
       "synopsis": "Playful stories that sneak in early number sense.",
       "section": "series",
@@ -2175,12 +2028,12 @@
       "trailers": [],
       "seasons": [
         {
-          "id": 84,
+          "id": 118,
           "season_number": 1,
           "title": "Season 1",
           "episodes": [
             {
-              "id": 303,
+              "id": 500,
               "content_group": "number-nest-s01e01",
               "episode_number": 1,
               "title": "The Lost Kite",
@@ -2195,7 +2048,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 304,
+              "id": 501,
               "content_group": "number-nest-s01e02",
               "episode_number": 2,
               "title": "rain on the roof",
@@ -2210,7 +2063,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 305,
+              "id": 502,
               "content_group": "number-nest-s01e03",
               "episode_number": 3,
               "title": "A Bridge of Stones",
@@ -2225,7 +2078,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 306,
+              "id": 503,
               "content_group": "number-nest-s01e04",
               "episode_number": 4,
               "title": "The Midnight Market",
@@ -2240,7 +2093,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 307,
+              "id": 504,
               "content_group": "number-nest-s01e05",
               "episode_number": 5,
               "title": "Footprints in Flour",
@@ -2255,7 +2108,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 308,
+              "id": 505,
               "content_group": "number-nest-s01e06",
               "episode_number": 6,
               "title": "The Whistling Well",
@@ -2278,154 +2131,7 @@
       "total_episodes": 6
     },
     {
-      "id": 86,
-      "title": "Rhyme Rangers",
-      "synopsis": "A band of friends who solve problems in rhyme.",
-      "section": "series",
-      "category": "music, language",
-      "artwork": {
-        "poster": "/uploads/poster_good.jpg",
-        "banner": "/uploads/banner_good.jpg"
-      },
-      "poster_url": "/uploads/poster_good.jpg",
-      "banner_url": "/uploads/banner_good.jpg",
-      "trailers": [],
-      "seasons": [
-        {
-          "id": 85,
-          "season_number": 1,
-          "title": "Season 1",
-          "episodes": [
-            {
-              "id": 311,
-              "content_group": "rhyme-rangers-s01e01",
-              "episode_number": 1,
-              "title": "The Lost Kite",
-              "description": "The Lost Kite - Rhyme Rangers (en)",
-              "duration": 510,
-              "languages": [
-                "en"
-              ],
-              "artwork": {
-                "thumbnail": "/uploads/thumb_good.jpg"
-              },
-              "thumbnail_url": "/uploads/thumb_good.jpg"
-            },
-            {
-              "id": 312,
-              "content_group": "rhyme-rangers-s01e02",
-              "episode_number": 2,
-              "title": "Rain on the Roof",
-              "description": "Rain on the Roof - Rhyme Rangers (en)",
-              "duration": 600,
-              "languages": [
-                "en"
-              ],
-              "artwork": {
-                "thumbnail": "/uploads/thumb_good.jpg"
-              },
-              "thumbnail_url": "/uploads/thumb_good.jpg"
-            },
-            {
-              "id": 313,
-              "content_group": "rhyme-rangers-s01e03",
-              "episode_number": 3,
-              "title": "A Bridge of Stones",
-              "description": "A Bridge of Stones - Rhyme Rangers (en)",
-              "duration": 420,
-              "languages": [
-                "en"
-              ],
-              "artwork": {
-                "thumbnail": "/uploads/thumb_good.jpg"
-              },
-              "thumbnail_url": "/uploads/thumb_good.jpg"
-            },
-            {
-              "id": 314,
-              "content_group": "rhyme-rangers-s01e04",
-              "episode_number": 4,
-              "title": "The Midnight Market",
-              "description": "The Midnight Market - Rhyme Rangers (en)",
-              "duration": 420,
-              "languages": [
-                "en"
-              ],
-              "artwork": {
-                "thumbnail": "/uploads/thumb_good.jpg"
-              },
-              "thumbnail_url": "/uploads/thumb_good.jpg"
-            },
-            {
-              "id": 315,
-              "content_group": "rhyme-rangers-s01e05",
-              "episode_number": 5,
-              "title": "Footprints in Flour",
-              "description": "Footprints in Flour - Rhyme Rangers (en)",
-              "duration": 600,
-              "languages": [
-                "en"
-              ],
-              "artwork": {
-                "thumbnail": "/uploads/thumb_good.jpg"
-              },
-              "thumbnail_url": "/uploads/thumb_good.jpg"
-            },
-            {
-              "id": 316,
-              "content_group": "rhyme-rangers-s01e06",
-              "episode_number": 6,
-              "title": "The Whistling Well",
-              "description": "The Whistling Well - Rhyme Rangers (en)",
-              "duration": 540,
-              "languages": [
-                "en"
-              ],
-              "artwork": {
-                "thumbnail": "/uploads/thumb_good.jpg"
-              },
-              "thumbnail_url": "/uploads/thumb_good.jpg"
-            },
-            {
-              "id": 317,
-              "content_group": "rhyme-rangers-s01e07",
-              "episode_number": 7,
-              "title": "Grandmother's Map",
-              "description": "Grandmother's Map - Rhyme Rangers (en)",
-              "duration": 480,
-              "languages": [
-                "en"
-              ],
-              "artwork": {
-                "thumbnail": "/uploads/thumb_good.jpg"
-              },
-              "thumbnail_url": "/uploads/thumb_good.jpg"
-            },
-            {
-              "id": 318,
-              "content_group": "rhyme-rangers-s01e08",
-              "episode_number": 8,
-              "title": "The Runaway Cart",
-              "description": "The Runaway Cart - Rhyme Rangers (en)",
-              "duration": 510,
-              "languages": [
-                "en"
-              ],
-              "artwork": {
-                "thumbnail": "/uploads/thumb_good.jpg"
-              },
-              "thumbnail_url": "/uploads/thumb_good.jpg"
-            }
-          ]
-        }
-      ],
-      "available_languages": [
-        "en"
-      ],
-      "total_episodes": 8
-    },
-    {
-      "id": 80,
+      "id": 131,
       "title": "Tiny Tales by Banyan Dadi",
       "synopsis": "Banyan Dadi tells short bedtime tales under the old banyan tree.",
       "section": "series",
@@ -2438,7 +2144,7 @@
       "banner_url": "/uploads/banner_good.jpg",
       "trailers": [
         {
-          "id": 242,
+          "id": 439,
           "title": "Trailer",
           "description": "Trailer - Tiny Tales by Banyan Dadi (en)",
           "duration": 75,
@@ -2453,12 +2159,12 @@
       ],
       "seasons": [
         {
-          "id": 79,
+          "id": 113,
           "season_number": 1,
           "title": "Season 1",
           "episodes": [
             {
-              "id": 243,
+              "id": 440,
               "content_group": "tiny-tales-banyan-dadi-s01e01",
               "episode_number": 1,
               "title": "The Lost Kite",
@@ -2474,7 +2180,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 245,
+              "id": 442,
               "content_group": "tiny-tales-banyan-dadi-s01e02",
               "episode_number": 2,
               "title": "Rain on the Roof",
@@ -2490,7 +2196,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 247,
+              "id": 444,
               "content_group": "tiny-tales-banyan-dadi-s01e03",
               "episode_number": 3,
               "title": "A Bridge of Stones",
@@ -2506,7 +2212,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 249,
+              "id": 446,
               "content_group": "tiny-tales-banyan-dadi-s01e04",
               "episode_number": 4,
               "title": "The Midnight Market",
@@ -2522,7 +2228,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 251,
+              "id": 448,
               "content_group": "tiny-tales-banyan-dadi-s01e05",
               "episode_number": 5,
               "title": "Footprints in Flour",
@@ -2538,7 +2244,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 253,
+              "id": 450,
               "content_group": "tiny-tales-banyan-dadi-s01e06",
               "episode_number": 6,
               "title": "The Whistling Well",
@@ -2554,7 +2260,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 255,
+              "id": 452,
               "content_group": "tiny-tales-banyan-dadi-s01e07",
               "episode_number": 7,
               "title": "Grandmother's Map",
@@ -2569,7 +2275,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 256,
+              "id": 453,
               "content_group": "tiny-tales-banyan-dadi-s01e08",
               "episode_number": 8,
               "title": "The Runaway Cart",
@@ -2584,7 +2290,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 257,
+              "id": 454,
               "content_group": "tiny-tales-banyan-dadi-s01e09",
               "episode_number": 9,
               "title": "Songs of the Sea",
@@ -2599,7 +2305,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 258,
+              "id": 455,
               "content_group": "tiny-tales-banyan-dadi-s01e10",
               "episode_number": 10,
               "title": "The Paper Boat",
@@ -2623,7 +2329,7 @@
       "total_episodes": 10
     },
     {
-      "id": 82,
+      "id": 133,
       "title": "Peblo Songs",
       "synopsis": "Catchy singalongs for little learners.",
       "section": "songs",
@@ -2637,12 +2343,12 @@
       "trailers": [],
       "seasons": [
         {
-          "id": 81,
+          "id": 115,
           "season_number": 1,
           "title": "Season 1",
           "episodes": [
             {
-              "id": 269,
+              "id": 466,
               "content_group": "peblo-songs-s01e01",
               "episode_number": 1,
               "title": "The Lost Kite",
@@ -2658,7 +2364,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 271,
+              "id": 468,
               "content_group": "peblo-songs-s01e02",
               "episode_number": 2,
               "title": "Rain on the Roof",
@@ -2674,7 +2380,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 273,
+              "id": 470,
               "content_group": "peblo-songs-s01e03",
               "episode_number": 3,
               "title": "A Bridge of Stones",
@@ -2690,7 +2396,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 275,
+              "id": 472,
               "content_group": "peblo-songs-s01e04",
               "episode_number": 4,
               "title": "The Midnight Market",
@@ -2706,7 +2412,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 277,
+              "id": 474,
               "content_group": "peblo-songs-s01e05",
               "episode_number": 5,
               "title": "Footprints in Flour",
@@ -2722,7 +2428,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 279,
+              "id": 476,
               "content_group": "peblo-songs-s01e06",
               "episode_number": 6,
               "title": "The Whistling Well",
@@ -2738,7 +2444,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 281,
+              "id": 478,
               "content_group": "peblo-songs-s01e07",
               "episode_number": 7,
               "title": "Grandmother's Map",
@@ -2753,7 +2459,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 282,
+              "id": 479,
               "content_group": "peblo-songs-s01e08",
               "episode_number": 8,
               "title": "The Runaway Cart",
@@ -2768,7 +2474,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 283,
+              "id": 480,
               "content_group": "peblo-songs-s01e09",
               "episode_number": 9,
               "title": "Songs of the Sea",
@@ -2783,7 +2489,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 284,
+              "id": 481,
               "content_group": "peblo-songs-s01e10",
               "episode_number": 10,
               "title": "The Paper Boat",
@@ -2807,7 +2513,7 @@
       "total_episodes": 10
     },
     {
-      "id": 83,
+      "id": 134,
       "title": "Peblo Songs — Lyrical",
       "synopsis": "The same songs with words on screen to read along.",
       "section": "songs",
@@ -2821,12 +2527,12 @@
       "trailers": [],
       "seasons": [
         {
-          "id": 82,
+          "id": 116,
           "season_number": 1,
           "title": "Season 1",
           "episodes": [
             {
-              "id": 285,
+              "id": 482,
               "content_group": "peblo-songs-lyrical-s01e01",
               "episode_number": 1,
               "title": "The Lost Kite",
@@ -2841,7 +2547,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 286,
+              "id": 483,
               "content_group": "peblo-songs-lyrical-s01e02",
               "episode_number": 2,
               "title": "Rain on the Roof",
@@ -2856,7 +2562,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 287,
+              "id": 484,
               "content_group": "peblo-songs-lyrical-s01e03",
               "episode_number": 3,
               "title": "A Bridge of Stones",
@@ -2871,7 +2577,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 288,
+              "id": 485,
               "content_group": "peblo-songs-lyrical-s01e04",
               "episode_number": 4,
               "title": "The Midnight Market",
@@ -2886,7 +2592,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 289,
+              "id": 486,
               "content_group": "peblo-songs-lyrical-s01e05",
               "episode_number": 5,
               "title": "Footprints in Flour",
@@ -2901,7 +2607,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 290,
+              "id": 487,
               "content_group": "peblo-songs-lyrical-s01e06",
               "episode_number": 6,
               "title": "The Whistling Well",
@@ -2916,7 +2622,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 291,
+              "id": 488,
               "content_group": "peblo-songs-lyrical-s01e07",
               "episode_number": 7,
               "title": "Grandmother's Map",
@@ -2931,7 +2637,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 292,
+              "id": 489,
               "content_group": "peblo-songs-lyrical-s01e08",
               "episode_number": 8,
               "title": "The Runaway Cart",
@@ -2946,7 +2652,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 293,
+              "id": 490,
               "content_group": "peblo-songs-lyrical-s01e09",
               "episode_number": 9,
               "title": "Songs of the Sea",
@@ -2961,7 +2667,7 @@
               "thumbnail_url": "/uploads/thumb_good.jpg"
             },
             {
-              "id": 294,
+              "id": 491,
               "content_group": "peblo-songs-lyrical-s01e10",
               "episode_number": 10,
               "title": "The Paper Boat",

@@ -6,9 +6,11 @@ export type PublishStatus = 'RUNNING' | 'SUCCESS' | 'FAILED';
 export interface User {
   id: number;
   name?: string | null;
+  username?: string | null;
   email: string;
   role: UserRole;
   is_active: boolean;
+  is_superadmin?: boolean;
 }
 
 export interface AuthResponse {
@@ -16,6 +18,14 @@ export interface AuthResponse {
   token_type: string;
   role: UserRole;
   email: string;
+  username?: string | null;
+}
+
+export interface CheckUsernameResponse {
+  username: string;
+  available: boolean;
+  suggestions: string[];
+  message: string;
 }
 
 export interface Artwork {
@@ -141,10 +151,12 @@ export interface PublishHistoryResponse {
 export interface UserItem {
   id: number;
   name?: string | null;
+  username?: string | null;
   email: string;
   role: UserRole;
   is_active: boolean;
   is_verified: boolean;
+  is_superadmin?: boolean;
   has_pending_setup: boolean;
   created_at: string;
   updated_at: string;
@@ -169,6 +181,7 @@ export interface SetupTokenResponse {
 export interface CreateUserResponse {
   id: number;
   name?: string | null;
+  username?: string | null;
   email: string;
   role: UserRole;
   message: string;

@@ -8,17 +8,39 @@ from app.config import settings
 logger = logging.getLogger(__name__)
 
 
-def build_setup_email_html(recipient_email: str, setup_url: str, expires_days: int = 7, user_name: Optional[str] = None) -> str:
+def build_setup_email_html(
+    recipient_email: str,
+    setup_url: str,
+    expires_days: int = 7,
+    user_name: Optional[str] = None,
+    username: Optional[str] = None,
+    role: str = "Editor",
+    temporary_password: Optional[str] = None,
+) -> str:
     """Generates a responsive HTML email styled with the PeBlo Studio brand."""
-    display_greeting = f"Welcome to the Team, {user_name}! 🎉" if user_name else "Welcome to the Team! 🎉"
-    recipient_desc = f"<strong style='color: #543488;'>{user_name}</strong> ({recipient_email})" if user_name else f"<strong style='color: #543488;'>{recipient_email}</strong>"
+    display_greeting = f"Welcome to the Team, {user_name or username or 'Editor'}! 🎉"
+    handle_str = f"@{username}" if username else recipient_email
+
+    temp_pass_block = ""
+    if temporary_password:
+        temp_pass_block = f"""
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f4effc; border-radius: 12px; border: 1.5px solid #543488; margin-bottom: 24px;">
+          <tr>
+            <td style="padding: 16px 20px;">
+              <p style="margin: 0 0 6px; font-size: 13px; font-weight: 700; color: #543488;">🔑 Your Temporary Credentials:</p>
+              <p style="margin: 0; font-size: 14px; color: #2d184c;">Username: <strong style="font-family: monospace; background: #ffffff; padding: 2px 6px; border-radius: 4px;">{username}</strong></p>
+              <p style="margin: 4px 0 0; font-size: 14px; color: #2d184c;">Temporary Password: <strong style="font-family: monospace; background: #ffffff; padding: 2px 6px; border-radius: 4px;">{temporary_password}</strong></p>
+            </td>
+          </tr>
+        </table>
+        """
 
     return f"""<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Set Up Your PeBlo Studio Account</title>
+  <title>Your PeBlo Studio Account Invitation</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #faf8fd; font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #2d184c;">
   <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #faf8fd; padding: 40px 20px;">
@@ -45,10 +67,13 @@ def build_setup_email_html(recipient_email: str, setup_url: str, expires_days: i
                 {display_greeting}
               </h2>
               <p style="color: #4b3869; font-size: 15px; line-height: 1.6; margin: 0 0 20px;">
-                An administrator has invited you ({recipient_desc}) to join <strong>PeBlo Kids TV Studio</strong> as an Editor.
+                You have been appointed to <strong>PeBlo Kids TV Studio</strong> as an <strong>{role}</strong> with username <strong style="color: #543488;">{handle_str}</strong>.
               </p>
+
+              {temp_pass_block}
+
               <p style="color: #4b3869; font-size: 15px; line-height: 1.6; margin: 0 0 28px;">
-                Please verify your email address and configure your password by clicking the button below to get started:
+                Please click the button below to verify your account and configure your secure password:
               </p>
 
               <!-- CTA Button -->
@@ -56,7 +81,7 @@ def build_setup_email_html(recipient_email: str, setup_url: str, expires_days: i
                 <tr>
                   <td align="center">
                     <a href="{setup_url}" target="_blank" style="display: inline-block; background-color: #543488; color: #ffffff; font-size: 15px; font-weight: 800; text-decoration: none; padding: 14px 34px; border-radius: 12px; box-shadow: 0 4px 14px rgba(84, 52, 136, 0.35); text-transform: none;">
-                      Verify Email & Set Password →
+                      Verify & Set Password →
                     </a>
                   </td>
                 </tr>
@@ -66,7 +91,7 @@ def build_setup_email_html(recipient_email: str, setup_url: str, expires_days: i
               <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: rgba(84, 52, 136, 0.04); border-radius: 12px; border: 1px dashed rgba(84, 52, 136, 0.2); margin-bottom: 24px;">
                 <tr>
                   <td style="padding: 14px 18px; font-size: 13px; color: #543488; line-height: 1.5;">
-                    ⏱️ <strong>Note:</strong> This setup link is valid for <strong>{expires_days} days</strong>. If you did not expect this invite, you can safely ignore this email.
+                    ⏱️ <strong>Security Note:</strong> This invitation link is valid for <strong>{expires_days} days</strong>. If you did not expect this invite, please notify your administrator.
                   </td>
                 </tr>
               </table>
@@ -96,12 +121,24 @@ def build_setup_email_html(recipient_email: str, setup_url: str, expires_days: i
 """
 
 
-def build_setup_email_text(recipient_email: str, setup_url: str, expires_days: int = 7, user_name: Optional[str] = None) -> str:
+def build_setup_email_text(
+    recipient_email: str,
+    setup_url: str,
+    expires_days: int = 7,
+    user_name: Optional[str] = None,
+    username: Optional[str] = None,
+    role: str = "Editor",
+    temporary_password: Optional[str] = None,
+) -> str:
     """Plain text fallback version of the setup email."""
     name_str = f" ({user_name}, {recipient_email})" if user_name else f" ({recipient_email})"
+    user_handle = f"@{username}" if username else recipient_email
+    temp_pwd_str = f"\nTemporary Password: {temporary_password}\n" if temporary_password else ""
+
     return f"""Welcome to PeBlo Kids TV Studio!
 
-An administrator has invited you{name_str} as an Editor.
+An administrator has appointed you as an {role} with username {user_handle}{name_str}.
+{temp_pwd_str}
 Please verify your email and set your account password by visiting the following link:
 
 {setup_url}
@@ -115,25 +152,34 @@ PeBlo Kids TV Studio CMS
 """
 
 
-def send_password_setup_email(recipient_email: str, setup_url: str, expires_days: int = 7, user_name: Optional[str] = None) -> Dict[str, Any]:
+def send_password_setup_email(
+    recipient_email: str,
+    setup_url: str,
+    expires_days: int = 7,
+    user_name: Optional[str] = None,
+    username: Optional[str] = None,
+    role: str = "Editor",
+    temporary_password: Optional[str] = None,
+) -> Dict[str, Any]:
     """
     Sends the password setup & email verification email to the recipient.
-    If SMTP is configured, sends via SMTP server.
+    If SMTP is configured, sends via SMTP server with TLS/SSL.
     Otherwise, logs to server console and returns simulation status.
     """
     clean_email = recipient_email.strip().lower()
 
     if not settings.SMTP_HOST:
         logger.info(
-            f"[EMAIL SERVICE - NO SMTP CONFIGURED] Setup email simulated for {clean_email} ({user_name or 'N/A'}):\n"
-            f"URL: {setup_url}"
+            f"[EMAIL SERVICE - DEV SIMULATION] Setup email generated for {clean_email} (Username: @{username or 'N/A'}, Role: {role}):\n"
+            f"Setup URL: {setup_url}\n"
+            f"Temp Password: {temporary_password or 'N/A'}"
         )
         return {
             "sent": True,
             "simulated": True,
             "email": clean_email,
             "setup_url": setup_url,
-            "message": f"Setup invitation generated for {clean_email}. (SMTP server is in development mode)",
+            "message": f"Invitation email simulated for {clean_email} (@{username or 'N/A'}). SMTP is in local development mode.",
         }
 
     try:
@@ -141,13 +187,17 @@ def send_password_setup_email(recipient_email: str, setup_url: str, expires_days
         from_header = f"{settings.SMTP_FROM_NAME} <{from_email}>" if settings.SMTP_FROM_NAME else from_email
 
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = "Welcome to PeBlo Studio — Set Your Editor Password"
+        msg["Subject"] = f"Welcome to PeBlo Studio — Invitation for @{username or clean_email}"
         msg["From"] = from_header
         msg["To"] = clean_email
 
         # Attach text and html parts
-        text_content = build_setup_email_text(clean_email, setup_url, expires_days, user_name=user_name)
-        html_content = build_setup_email_html(clean_email, setup_url, expires_days, user_name=user_name)
+        text_content = build_setup_email_text(
+            clean_email, setup_url, expires_days, user_name=user_name, username=username, role=role, temporary_password=temporary_password
+        )
+        html_content = build_setup_email_html(
+            clean_email, setup_url, expires_days, user_name=user_name, username=username, role=role, temporary_password=temporary_password
+        )
 
         msg.attach(MIMEText(text_content, "plain"))
         msg.attach(MIMEText(html_content, "html"))
@@ -166,7 +216,7 @@ def send_password_setup_email(recipient_email: str, setup_url: str, expires_days
         server.sendmail(from_email, [clean_email], msg.as_string())
         server.quit()
 
-        logger.info(f"[EMAIL SERVICE - SENT] Password setup email successfully delivered to {clean_email}")
+        logger.info(f"[EMAIL SERVICE - DELIVERED] Password setup email successfully sent to {clean_email}")
         return {
             "sent": True,
             "simulated": False,
@@ -180,8 +230,7 @@ def send_password_setup_email(recipient_email: str, setup_url: str, expires_days
         return {
             "sent": False,
             "simulated": False,
-            "error": str(exc),
             "email": clean_email,
             "setup_url": setup_url,
-            "message": f"Could not send email automatically: {exc}. You can copy and share the link manually.",
+            "message": f"Failed to send email via SMTP ({exc}). Please check SMTP credentials in .env.",
         }

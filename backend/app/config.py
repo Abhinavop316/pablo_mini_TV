@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +19,12 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = str(BASE_DIR / "uploads")
     CATALOGUE_PATH: str = str(BASE_DIR / "storage" / "catalogue.json")
 
+    # Root SuperAdmin Configuration from .env
+    ADMIN_EMAIL: str = "admin@peblo.tv"
+    ADMIN_USERNAME: str = "peblo_admin"
+    ADMIN_PASSWORD: str = "Admin@123"
+    ADMIN_NAME: str = "Peblo Super Admin"
+
     # Frontend URL for setup / verification links
     FRONTEND_URL: str = "http://localhost:5173"
 
@@ -30,6 +37,22 @@ class Settings(BaseSettings):
     SMTP_FROM_NAME: str = "PeBlo Kids TV Studio"
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
+
+    @field_validator("UPLOAD_DIR", mode="after")
+    @classmethod
+    def resolve_upload_dir(cls, v: str) -> str:
+        p = Path(v)
+        if not p.is_absolute():
+            return str((BASE_DIR / p).resolve())
+        return str(p.resolve())
+
+    @field_validator("CATALOGUE_PATH", mode="after")
+    @classmethod
+    def resolve_catalogue_path(cls, v: str) -> str:
+        p = Path(v)
+        if not p.is_absolute():
+            return str((BASE_DIR / p).resolve())
+        return str(p.resolve())
 
     class Config:
         env_file = str(BASE_DIR / ".env")

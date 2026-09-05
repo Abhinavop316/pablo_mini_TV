@@ -7,8 +7,16 @@ from app.models.user import UserRole
 class UserCreateRequest(BaseModel):
     name: Optional[str] = None
     email: EmailStr
+    username: Optional[str] = None
     role: UserRole = UserRole.EDITOR
+    temporary_password: Optional[str] = None
 
+
+class CheckUsernameResponse(BaseModel):
+    username: str
+    available: bool
+    suggestions: List[str] = []
+    message: str
 
 
 class UserStatusUpdateRequest(BaseModel):
@@ -18,10 +26,12 @@ class UserStatusUpdateRequest(BaseModel):
 class UserItemResponse(BaseModel):
     id: int
     name: Optional[str] = None
+    username: Optional[str] = None
     email: str
     role: UserRole
     is_active: bool
     is_verified: bool
+    is_superadmin: bool = False
     has_pending_setup: bool
     created_at: datetime
     updated_at: datetime
@@ -33,6 +43,7 @@ class UserItemResponse(BaseModel):
 class UserListResponse(BaseModel):
     items: List[UserItemResponse]
     total: int
+
 
 
 class SetupTokenResponse(BaseModel):
@@ -67,6 +78,7 @@ class VerifySetupTokenResponse(BaseModel):
 
 class CompleteSetupRequest(BaseModel):
     token: str
+    username: str = Field(..., min_length=3, max_length=50)
     password: str = Field(..., min_length=6)
 
 

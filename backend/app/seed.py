@@ -95,28 +95,55 @@ def seed_database(reset: bool = True):
     db: Session = SessionLocal()
 
     try:
-        # 1. Seed users
-        admin_user = db.query(User).filter(User.email == "admin@example.com").first()
-        if not admin_user:
-            admin_user = User(
-                email="admin@example.com",
-                password_hash=hash_password("Admin@123"),
+        # 1. Seed root superadmin user from environment configuration (.env)
+        root_email = settings.ADMIN_EMAIL.strip().lower()
+        root_username = settings.ADMIN_USERNAME.strip().lower()
+        
+        superadmin = db.query(User).filter(
+            (User.email.ilike(root_email)) | (User.username.ilike(root_username))
+        ).first()
+
+        if not superadmin:
+            superadmin = User(
+                name=settings.ADMIN_NAME,
+                username=root_username,
+                email=root_email,
+                password_hash=hash_password(settings.ADMIN_PASSWORD),
                 role=UserRole.ADMIN,
                 is_active=True,
+                is_verified=True,
+                is_superadmin=True,
             )
-            db.add(admin_user)
-            print("Created Admin user: admin@example.com / Admin@123")
+            db.add(superadmin)
+            print(f"Created Root SuperAdmin user: @{root_username} ({root_email})")
+        else:
+            # Sync superadmin properties from settings
+            superadmin.name = settings.ADMIN_NAME
+            superadmin.username = root_username
+            superadmin.email = root_email
+            superadmin.password_hash = hash_password(settings.ADMIN_PASSWORD)
+            superadmin.is_superadmin = True
+            superadmin.is_active = True
+            superadmin.is_verified = True
+            print(f"Synced Root SuperAdmin user: @{root_username} ({root_email})")
 
-        editor_user = db.query(User).filter(User.email == "editor@example.com").first()
+        # Seed sample editor if not present
+        editor_user = db.query(User).filter(
+            (User.email == "editor@example.com") | (User.username == "peblo_editor")
+        ).first()
         if not editor_user:
             editor_user = User(
+                name="PeBlo Senior Editor",
+                username="peblo_editor",
                 email="editor@example.com",
                 password_hash=hash_password("Editor@123"),
                 role=UserRole.EDITOR,
                 is_active=True,
+                is_verified=True,
+                is_superadmin=False,
             )
             db.add(editor_user)
-            print("Created Editor user: editor@example.com / Editor@123")
+            print("Created Editor user: @peblo_editor (editor@example.com)")
 
         db.commit()
 
