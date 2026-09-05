@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Trash2, AlertTriangle, X } from 'lucide-react';
 
 export interface ConfirmModalProps {
@@ -26,31 +27,52 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  // ESC key handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen && !isLoading) {
         onCancel();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, isLoading, onCancel]);
 
+  // Lock background scroll when modal is open so the page doesn't shift or require scrolling
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
         backgroundColor: 'rgba(84, 52, 136, 0.45)',
         backdropFilter: 'blur(6px)',
-        zIndex: 1000,
+        WebkitBackdropFilter: 'blur(6px)',
+        zIndex: 999999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-        animation: 'fadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        margin: 0,
+        boxSizing: 'border-box',
       }}
       onClick={!isLoading ? onCancel : undefined}
     >
@@ -61,10 +83,11 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           backgroundColor: '#ffffff',
           borderRadius: 'var(--radius-xl)',
           border: '2px solid rgba(84, 52, 136, 0.18)',
-          boxShadow: '0 20px 50px rgba(84, 52, 136, 0.22)',
+          boxShadow: '0 24px 60px rgba(84, 52, 136, 0.28)',
           padding: '32px',
           position: 'relative',
           overflow: 'hidden',
+          animation: 'fadeInUp 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -73,6 +96,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           <button
             type="button"
             onClick={onCancel}
+            aria-label="Close dialog"
             style={{
               position: 'absolute',
               top: '18px',
@@ -235,4 +259,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };

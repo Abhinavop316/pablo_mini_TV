@@ -10,8 +10,9 @@ import { ShowsListPage } from './pages/ShowsListPage';
 import { ShowFormPage } from './pages/ShowFormPage';
 import { ShowDetailPage } from './pages/ShowDetailPage';
 import { EpisodeFormPage } from './pages/EpisodeFormPage';
-import { PublishPage } from './pages/PublishPage';
 import { PublishHistoryPage } from './pages/PublishHistoryPage';
+import { UsersListPage } from './pages/UsersListPage';
+import { SetupPasswordPage } from './pages/SetupPasswordPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,7 @@ export const App: React.FC = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/setup-password" element={<SetupPasswordPage />} />
 
             {/* Protected Admin/Editor CMS routes */}
             <Route element={<ProtectedRoute />}>
@@ -40,8 +42,9 @@ export const App: React.FC = () => {
                 <Route path="shows/:id/edit" element={<ShowFormPage />} />
                 <Route path="episodes/new" element={<EpisodeFormPage />} />
                 <Route path="episodes/:id/edit" element={<EpisodeFormPage />} />
-                <Route path="publish" element={<PublishPage />} />
+                <Route path="publish" element={<Navigate to="/admin/publish/history" replace />} />
                 <Route path="publish/history" element={<PublishHistoryPage />} />
+                <Route path="users" element={<UsersListPage />} />
               </Route>
             </Route>
 
@@ -56,3 +59,4 @@ export const App: React.FC = () => {
 };
 
 export default App;
+

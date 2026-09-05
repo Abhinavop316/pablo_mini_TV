@@ -36,10 +36,11 @@ export const ShowDetailPage: React.FC = () => {
 
   const activeSeason = seasons.find((s) => s.id === activeSeasonId) || seasons[0];
 
-  const posterUrl = show?.poster_url
-    ? show.poster_url.startsWith('http')
-      ? show.poster_url
-      : `${API_BASE_URL}${show.poster_url}`
+  const rawPoster = show?.artwork?.poster || show?.poster_url;
+  const posterUrl = rawPoster
+    ? rawPoster.startsWith('http')
+      ? rawPoster
+      : `${API_BASE_URL}${rawPoster}`
     : null;
 
   if (isLoading) {
@@ -212,10 +213,11 @@ export const ShowDetailPage: React.FC = () => {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
               {trailers.map((trailer) => {
-                const thumb = trailer.thumbnail_url
-                  ? trailer.thumbnail_url.startsWith('http')
-                    ? trailer.thumbnail_url
-                    : `${API_BASE_URL}${trailer.thumbnail_url}`
+                const rawThumb = trailer.artwork?.thumbnail || trailer.thumbnail_url;
+                const thumb = rawThumb
+                  ? rawThumb.startsWith('http')
+                    ? rawThumb
+                    : `${API_BASE_URL}${rawThumb}`
                   : null;
 
                 const mins = trailer.duration ? Math.floor(trailer.duration / 60) : null;
@@ -362,10 +364,11 @@ export const ShowDetailPage: React.FC = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
               {activeSeason.episodes.map((ep) => {
-                const thumb = ep.thumbnail_url
-                  ? ep.thumbnail_url.startsWith('http')
-                    ? ep.thumbnail_url
-                    : `${API_BASE_URL}${ep.thumbnail_url}`
+                const rawThumb = ep.artwork?.thumbnail || ep.thumbnail_url;
+                const thumb = rawThumb
+                  ? rawThumb.startsWith('http')
+                    ? rawThumb
+                    : `${API_BASE_URL}${rawThumb}`
                   : null;
 
                 const mins = ep.duration ? Math.floor(ep.duration / 60) : null;

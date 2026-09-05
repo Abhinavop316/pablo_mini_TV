@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Search, Settings, Play } from 'lucide-react';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Search, Play } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,18 +82,21 @@ export const Navbar: React.FC = () => {
               Home
             </NavLink>
             <NavLink
-              to="/search"
-              style={({ isActive }) => ({
-                fontSize: '15px',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: isActive ? 700 : 500,
-                color: isActive ? '#543488' : 'rgba(84, 52, 136, 0.7)',
-                padding: '6px 16px',
-                borderRadius: 'var(--radius-full)',
-                backgroundColor: isActive ? 'rgba(84, 52, 136, 0.09)' : 'transparent',
-                border: isActive ? '1.5px solid #543488' : '1.5px solid transparent',
-                transition: 'all 0.2s ease',
-              })}
+              to="/shows"
+              style={({ isActive }) => {
+                const isShowsActive = isActive || location.pathname.startsWith('/show');
+                return {
+                  fontSize: '15px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: isShowsActive ? 700 : 500,
+                  color: isShowsActive ? '#543488' : 'rgba(84, 52, 136, 0.7)',
+                  padding: '6px 16px',
+                  borderRadius: 'var(--radius-full)',
+                  backgroundColor: isShowsActive ? 'rgba(84, 52, 136, 0.09)' : 'transparent',
+                  border: isShowsActive ? '1.5px solid #543488' : '1.5px solid transparent',
+                  transition: 'all 0.2s ease',
+                };
+              }}
             >
               Explore Shows
             </NavLink>
@@ -104,7 +108,7 @@ export const Navbar: React.FC = () => {
           {/* Search Button */}
           <button
             type="button"
-            onClick={() => navigate('/search')}
+            onClick={() => navigate('/shows')}
             title="Search Catalogue"
             style={{
               display: 'flex',
@@ -157,36 +161,6 @@ export const Navbar: React.FC = () => {
           >
             <Play size={15} fill="#ffffff" />
             Watch On YouTube
-          </a>
-
-          {/* Admin CMS Studio Link */}
-          <a
-            href="http://localhost:5173"
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '9px 16px',
-              borderRadius: 'var(--radius-full)',
-              backgroundColor: '#ffffff',
-              border: '1.5px solid #543488',
-              color: '#543488',
-              fontSize: '13px',
-              fontWeight: 700,
-              fontFamily: 'var(--font-heading)',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(84, 52, 136, 0.08)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#ffffff';
-            }}
-          >
-            <Settings size={14} />
-            Studio CMS
           </a>
         </div>
       </div>

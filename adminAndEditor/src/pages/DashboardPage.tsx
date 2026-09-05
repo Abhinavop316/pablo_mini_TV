@@ -50,11 +50,11 @@ export const DashboardPage: React.FC = () => {
             New Show
           </Link>
           <Link
-            to="/admin/publish"
+            to="/admin/publish/history"
             className="btn-peblo-primary"
           >
             <UploadCloud size={16} />
-            Publish Console
+            Publish History & Timelines
           </Link>
         </div>
       </div>
@@ -254,7 +254,7 @@ export const DashboardPage: React.FC = () => {
               Publishing Readiness
             </h3>
             <Link
-              to="/admin/publish"
+              to="/admin/publish/history"
               style={{
                 fontSize: '13px',
                 color: '#543488',
@@ -265,7 +265,7 @@ export const DashboardPage: React.FC = () => {
                 fontFamily: 'var(--font-heading)',
               }}
             >
-              View Report <ArrowRight size={14} />
+              View Timelines <ArrowRight size={14} />
             </Link>
           </div>
 

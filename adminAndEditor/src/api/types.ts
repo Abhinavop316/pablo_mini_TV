@@ -5,6 +5,7 @@ export type PublishStatus = 'RUNNING' | 'SUCCESS' | 'FAILED';
 
 export interface User {
   id: number;
+  name?: string | null;
   email: string;
   role: UserRole;
   is_active: boolean;
@@ -135,4 +136,117 @@ export interface PublishTriggerResponse {
 export interface PublishHistoryResponse {
   items: PublishRun[];
   total: number;
+}
+
+export interface UserItem {
+  id: number;
+  name?: string | null;
+  email: string;
+  role: UserRole;
+  is_active: boolean;
+  is_verified: boolean;
+  has_pending_setup: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserListResponse {
+  items: UserItem[];
+  total: number;
+}
+
+export interface SetupTokenResponse {
+  user_id: number;
+  name?: string | null;
+  email: string;
+  setup_token: string;
+  setup_url: string;
+  expires_at: string;
+  email_sent?: boolean;
+  email_message?: string;
+}
+
+export interface CreateUserResponse {
+  id: number;
+  name?: string | null;
+  email: string;
+  role: UserRole;
+  message: string;
+  setup_token?: string | null;
+  setup_url?: string | null;
+  expires_at?: string | null;
+  email_sent?: boolean;
+  email_message?: string;
+}
+
+
+export interface VerifySetupTokenResponse {
+  valid: boolean;
+  name?: string | null;
+  email: string;
+  role: UserRole;
+}
+
+export interface CompleteSetupResponse {
+  success: boolean;
+  message: string;
+  email: string;
+}
+
+export interface SendSetupEmailResponse {
+  success: boolean;
+  email: string;
+  message: string;
+  setup_url: string;
+}
+
+export interface EpisodeTimelineItem {
+  id: number;
+  episode_number: number;
+  title: string;
+  language: string;
+  duration?: number | null;
+  content_group: string;
+  status: ItemStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SeasonTimelineItem {
+  id: number;
+  season_number: number;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  episodes_count: number;
+  published_episodes_count: number;
+  episodes: EpisodeTimelineItem[];
+}
+
+export interface ShowTimelineItem {
+  id: number;
+  title: string;
+  synopsis?: string | null;
+  section?: string | null;
+  category?: string | null;
+  status: ItemStatus;
+  created_at: string;
+  updated_at: string;
+  poster_url?: string | null;
+  banner_url?: string | null;
+  seasons_count: number;
+  episodes_count: number;
+  published_episodes_count: number;
+  seasons: SeasonTimelineItem[];
+}
+
+export interface ShowsTimelineResponse {
+  latest_publish_run?: {
+    id: number;
+    completed_at?: string | null;
+    triggered_by: string;
+    shows_count: number;
+    episodes_count: number;
+  } | null;
+  shows: ShowTimelineItem[];
 }

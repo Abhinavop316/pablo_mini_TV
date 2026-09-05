@@ -3,6 +3,8 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
 import type { Show, ItemStatus } from '../api/types';
+import { SECTIONS, CATEGORIES, LANGUAGES } from '../constants/taxonomies';
+import { CustomSelect } from '../components/CustomSelect';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 
 export const ShowFormPage: React.FC = () => {
@@ -15,6 +17,7 @@ export const ShowFormPage: React.FC = () => {
   const [synopsis, setSynopsis] = useState('');
   const [section, setSection] = useState('');
   const [category, setCategory] = useState('');
+  const [language, setLanguage] = useState('en');
   const [status, setStatus] = useState<ItemStatus>('DRAFT');
   const [error, setError] = useState<string | null>(null);
 
@@ -185,95 +188,75 @@ export const ShowFormPage: React.FC = () => {
             />
           </div>
 
-          {/* Grid for Section, Category, Status */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+          {/* Grid for Section, Category, Language, Status */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '18px' }}>
             {/* Section */}
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                Section {status === 'PUBLISHED' && <span style={{ color: 'var(--danger)' }}>*</span>}
-              </label>
-              <input
-                type="text"
-                value={section}
-                onChange={(e) => setSection(e.target.value)}
-                placeholder="e.g. Trending Now, Peblo Originals"
-                list="sections-datalist"
-                style={{
-                  width: '100%',
-                  padding: '11px 14px',
-                  backgroundColor: 'var(--bg-primary)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                  outline: 'none',
-                }}
-              />
-              <datalist id="sections-datalist">
-                <option value="Trending Now" />
-                <option value="Peblo Originals" />
-                <option value="Kids & Family" />
-                <option value="Crime Thrillers" />
-                <option value="Sci-Fi & Fantasy" />
-                <option value="Documentaries" />
-              </datalist>
-            </div>
+            <CustomSelect
+              label="Section"
+              required={status === 'PUBLISHED'}
+              value={section}
+              onChange={setSection}
+              placeholder="-- Select Section --"
+              searchable={false}
+              options={SECTIONS.map((sec) => ({
+                value: sec,
+                label: sec.charAt(0).toUpperCase() + sec.slice(1),
+                badge: sec === 'featured' ? 'Hero' : undefined,
+              }))}
+              helperText={status === 'PUBLISHED' ? 'Required for published status' : 'Select layout display section'}
+            />
 
             {/* Category */}
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                Category
-              </label>
-              <input
-                type="text"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="e.g. Sci-Fi, Drama, Animation"
-                list="categories-datalist"
-                style={{
-                  width: '100%',
-                  padding: '11px 14px',
-                  backgroundColor: 'var(--bg-primary)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                  outline: 'none',
-                }}
-              />
-              <datalist id="categories-datalist">
-                <option value="Sci-Fi" />
-                <option value="Drama" />
-                <option value="Animation" />
-                <option value="Comedy" />
-                <option value="Fantasy" />
-                <option value="Thriller" />
-              </datalist>
-            </div>
+            <CustomSelect
+              label="Category"
+              value={category}
+              onChange={setCategory}
+              placeholder="-- Select Category --"
+              searchable={true}
+              options={CATEGORIES.map((cat) => ({
+                value: cat,
+                label: cat.charAt(0).toUpperCase() + cat.slice(1),
+              }))}
+              helperText="Curated topic for viewer discovery"
+            />
+
+            {/* Language */}
+            <CustomSelect
+              label="Language"
+              value={language}
+              onChange={setLanguage}
+              placeholder="-- Select Language --"
+              searchable={false}
+              options={LANGUAGES.map((lang) => ({
+                value: lang.code,
+                label: `${lang.name} (${lang.code.toUpperCase()})`,
+                badge: lang.code === 'en' ? 'English' : 'Hindi',
+              }))}
+              helperText="Target audio locale (English, Hindi)"
+            />
 
             {/* Status */}
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                Status
-              </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as ItemStatus)}
-                style={{
-                  width: '100%',
-                  padding: '11px 14px',
-                  backgroundColor: 'var(--bg-primary)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                  outline: 'none',
-                }}
-              >
-                <option value="DRAFT">Draft (Work in Progress)</option>
-                <option value="PUBLISHED">Published (Visible in Catalogue)</option>
-              </select>
-            </div>
+            <CustomSelect
+              label="Status"
+              value={status}
+              onChange={(val) => setStatus(val as ItemStatus)}
+              searchable={false}
+              options={[
+                {
+                  value: 'DRAFT',
+                  label: 'Draft',
+                  description: 'Work in progress, hidden from public catalog',
+                  badge: 'Internal',
+                },
+                {
+                  value: 'PUBLISHED',
+                  label: 'Published',
+                  description: 'Live & available to stream in Viewer',
+                  badge: 'Live',
+                },
+              ]}
+              helperText="Defines public visibility status"
+            />
           </div>
 
           {/* Submit Button */}

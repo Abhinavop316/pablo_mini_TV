@@ -9,10 +9,11 @@ interface ShowCardProps {
 }
 
 export const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
-  const posterUrl = show.poster_url
-    ? show.poster_url.startsWith('http')
-      ? show.poster_url
-      : `${API_BASE_URL}${show.poster_url}`
+  const rawPoster = show.artwork?.poster || show.poster_url;
+  const posterUrl = rawPoster
+    ? rawPoster.startsWith('http')
+      ? rawPoster
+      : `${API_BASE_URL}${rawPoster}`
     : null;
 
   return (

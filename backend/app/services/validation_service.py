@@ -127,3 +127,71 @@ def generate_validation_report(db: Session) -> ValidationReportResponse:
         errors=errors,
         warnings=warnings,
     )
+
+
+def validate_single_show(db: Session, show: Show) -> List[ValidationErrorItem]:
+    """
+    Validates a single show for publication readiness:
+    - Must have a section defined
+    - Must have a valid Poster image
+    - If it has published episodes, each must have duration > 0 and a thumbnail image
+    """
+    errors: List[ValidationErrorItem] = []
+
+    # 1. Section check
+    if not show.section or not show.section.strip():
+        errors.append(
+            ValidationErrorItem(
+                entity_type="show",
+                entity_id=show.id,
+                title=show.title,
+                reason=f"Show '{show.title}' must have a section specified (e.g. 'Trending Now', 'Popular Kids').",
+                show_id=show.id,
+                show_title=show.title,
+            )
+        )
+
+    # 2. Poster check
+    has_poster = any(art.type == ArtworkType.POSTER for art in show.artwork)
+    if not has_poster:
+        errors.append(
+            ValidationErrorItem(
+                entity_type="show",
+                entity_id=show.id,
+                title=show.title,
+                reason=f"Show '{show.title}' is missing a Poster image (required for viewer catalog display).",
+                show_id=show.id,
+                show_title=show.title,
+            )
+        )
+
+    # 3. Check published episodes
+    for season in show.seasons:
+        for ep in season.episodes:
+            if ep.status == ItemStatus.PUBLISHED:
+                if ep.duration is None or ep.duration <= 0:
+                    errors.append(
+                        ValidationErrorItem(
+                            entity_type="episode",
+                            entity_id=ep.id,
+                            title=ep.title,
+                            reason=f"Published episode '{ep.title}' (Season {season.season_number}) is missing a valid duration.",
+                            show_id=show.id,
+                            show_title=show.title,
+                        )
+                    )
+                has_thumbnail = any(art.type == ArtworkType.THUMBNAIL for art in ep.artwork)
+                if not has_thumbnail:
+                    errors.append(
+                        ValidationErrorItem(
+                            entity_type="episode",
+                            entity_id=ep.id,
+                            title=ep.title,
+                            reason=f"Published episode '{ep.title}' (Season {season.season_number}) is missing thumbnail artwork.",
+                            show_id=show.id,
+                            show_title=show.title,
+                        )
+                    )
+
+    return errors
+

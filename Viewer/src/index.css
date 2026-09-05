@@ -162,3 +162,78 @@ button {
 ::-webkit-scrollbar-thumb:hover {
   background: #543488;
 }
+
+/* Animations for Mobile Filter Bottom Sheet */
+@keyframes slideUpSheet {
+  from {
+    transform: translateY(100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.desktop-filter-chips {
+  display: flex !important;
+}
+
+.mobile-filter-bar {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .desktop-filter-chips {
+    display: none !important;
+  }
+
+  .mobile-filter-bar {
+    display: flex !important;
+  }
+}
+
+@keyframes heroProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Playful Irregular Wavy Kid-Themed Hero Banner Frame */
+.kid-hero-banner {
+  border-radius: 58px 28px 68px 32px / 32px 68px 28px 58px !important;
+  border: 4.5px solid #543488 !important;
+  box-shadow: 0 10px 0px rgba(84, 52, 136, 0.2), 0 22px 50px rgba(84, 52, 136, 0.22) !important;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.kid-hero-banner:hover {
+  transform: translateY(-3px) scale(1.003);
+  box-shadow: 0 14px 0px rgba(84, 52, 136, 0.24), 0 28px 58px rgba(84, 52, 136, 0.26) !important;
+}
+
+
+

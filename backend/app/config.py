@@ -18,9 +18,23 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = str(BASE_DIR / "uploads")
     CATALOGUE_PATH: str = str(BASE_DIR / "storage" / "catalogue.json")
 
+    # Frontend URL for setup / verification links
+    FRONTEND_URL: str = "http://localhost:5173"
+
+    # SMTP Email Configuration
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM_EMAIL: str = ""
+    SMTP_FROM_NAME: str = "PeBlo Kids TV Studio"
+    SMTP_TLS: bool = True
+    SMTP_SSL: bool = False
+
     class Config:
         env_file = str(BASE_DIR / ".env")
         extra = "ignore"
+
 
 
 settings = Settings()

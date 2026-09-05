@@ -4,22 +4,29 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
 import type { Episode, ItemStatus } from '../api/types';
 import { ArtworkUploader } from '../components/ArtworkUploader';
+import { LANGUAGES, CONVENTIONS } from '../constants/taxonomies';
+import { CustomSelect } from '../components/CustomSelect';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 
 export const EpisodeFormPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const seasonIdParam = searchParams.get('season_id');
+  const showTitleQuery = searchParams.get('title') || '';
+  const seasonNumQuery = searchParams.get('season') || '';
+  const episodeNumQuery = searchParams.get('episode') || '';
 
   const isEditing = !!id;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [episodeNumber, setEpisodeNumber] = useState<number>(1);
+  const [episodeNumber, setEpisodeNumber] = useState<number>(
+    episodeNumQuery && !isNaN(Number(episodeNumQuery)) ? Number(episodeNumQuery) : 1
+  );
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [duration, setDuration] = useState<string>('');
-  const [language, setLanguage] = useState('English');
+  const [language, setLanguage] = useState('en');
   const [contentGroup, setContentGroup] = useState('');
   const [status, setStatus] = useState<ItemStatus>('DRAFT');
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +43,8 @@ export const EpisodeFormPage: React.FC = () => {
       setTitle(existingEpisode.title || '');
       setDescription(existingEpisode.description || '');
       setDuration(existingEpisode.duration ? existingEpisode.duration.toString() : '');
-      setLanguage(existingEpisode.language || 'English');
+      const rawLang = existingEpisode.language || 'en';
+      setLanguage(rawLang.toLowerCase() === 'english' ? 'en' : rawLang.toLowerCase() === 'hindi' ? 'hi' : rawLang);
       setContentGroup(existingEpisode.content_group || '');
       setStatus(existingEpisode.status || 'DRAFT');
     }
@@ -129,6 +137,25 @@ export const EpisodeFormPage: React.FC = () => {
         <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
           {isEditing ? `Edit Episode: ${existingEpisode?.title}` : 'Create New Episode'}
         </h1>
+        {(showTitleQuery || seasonNumQuery) && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
+            {showTitleQuery && (
+              <span style={{ fontSize: '12px', fontWeight: 700, padding: '3px 10px', borderRadius: 'var(--radius-full)', backgroundColor: 'rgba(84, 52, 136, 0.08)', color: '#543488', border: '1px solid rgba(84, 52, 136, 0.2)' }}>
+                Series: {showTitleQuery}
+              </span>
+            )}
+            {seasonNumQuery !== '' && (
+              <span style={{ fontSize: '12px', fontWeight: 700, padding: '3px 10px', borderRadius: 'var(--radius-full)', backgroundColor: 'rgba(84, 52, 136, 0.08)', color: '#543488', border: '1px solid rgba(84, 52, 136, 0.2)' }}>
+                {seasonNumQuery === '0' ? 'Trailer Season' : `Season ${seasonNumQuery}`}
+              </span>
+            )}
+            {episodeNumber && (
+              <span style={{ fontSize: '12px', fontWeight: 700, padding: '3px 10px', borderRadius: 'var(--radius-full)', backgroundColor: '#543488', color: '#ffffff' }}>
+                EP #{episodeNumber}
+              </span>
+            )}
+          </div>
+        )}
         <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '24px' }}>
           Configure episode metadata, language variants, duration, and thumbnail artwork.
         </p>
@@ -258,41 +285,24 @@ export const EpisodeFormPage: React.FC = () => {
             </div>
 
             {/* Language */}
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                Language *
-              </label>
-              <input
-                type="text"
-                required
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                placeholder="e.g. English, Hindi, Spanish"
-                list="language-options"
-                style={{
-                  width: '100%',
-                  padding: '11px 14px',
-                  backgroundColor: 'var(--bg-primary)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                  outline: 'none',
-                }}
-              />
-              <datalist id="language-options">
-                <option value="English" />
-                <option value="Hindi" />
-                <option value="Spanish" />
-                <option value="French" />
-                <option value="German" />
-                <option value="Japanese" />
-              </datalist>
-            </div>
+            <CustomSelect
+              label="Language"
+              required={true}
+              value={language}
+              onChange={setLanguage}
+              placeholder="-- Select Language --"
+              searchable={false}
+              options={LANGUAGES.map((lang) => ({
+                value: lang.code,
+                label: `${lang.name} (${lang.code.toUpperCase()})`,
+                badge: lang.code === 'en' ? 'English' : 'Hindi',
+              }))}
+              helperText="Audio and subtitles locale"
+            />
 
             {/* Content Group */}
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>
                 Content Group *
               </label>
               <input
@@ -300,46 +310,45 @@ export const EpisodeFormPage: React.FC = () => {
                 required
                 value={contentGroup}
                 onChange={(e) => setContentGroup(e.target.value)}
-                placeholder="e.g. ep_scifi_1"
+                placeholder="e.g. ep_moti_1"
                 style={{
                   width: '100%',
                   padding: '11px 14px',
                   backgroundColor: 'var(--bg-primary)',
-                  border: '1px solid var(--border)',
+                  border: '1.5px solid var(--border)',
                   borderRadius: 'var(--radius-md)',
                   color: 'var(--text-primary)',
                   fontSize: '14px',
                   outline: 'none',
                 }}
               />
-              <span style={{ fontSize: '11px', color: 'var(--accent-light)' }}>
-                Identifies language variants of same episode
+              <span style={{ fontSize: '11px', color: '#7c3aed', display: 'block', marginTop: '4px' }}>
+                {CONVENTIONS.content_group}
               </span>
             </div>
 
             {/* Status */}
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                Status
-              </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as ItemStatus)}
-                style={{
-                  width: '100%',
-                  padding: '11px 14px',
-                  backgroundColor: 'var(--bg-primary)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                  outline: 'none',
-                }}
-              >
-                <option value="DRAFT">Draft</option>
-                <option value="PUBLISHED">Published</option>
-              </select>
-            </div>
+            <CustomSelect
+              label="Status"
+              value={status}
+              onChange={(val) => setStatus(val as ItemStatus)}
+              searchable={false}
+              options={[
+                {
+                  value: 'DRAFT',
+                  label: 'Draft',
+                  description: 'Hidden from public feed',
+                  badge: 'Internal',
+                },
+                {
+                  value: 'PUBLISHED',
+                  label: 'Published',
+                  description: 'Live & available for streaming',
+                  badge: 'Live',
+                },
+              ]}
+              helperText="Episode visibility state"
+            />
           </div>
 
           {/* Actions */}

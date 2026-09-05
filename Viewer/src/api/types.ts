@@ -1,3 +1,9 @@
+export interface CatalogArtwork {
+  poster?: string | null;
+  banner?: string | null;
+  thumbnail?: string | null;
+}
+
 export interface CatalogEpisode {
   id: number;
   content_group: string;
@@ -6,6 +12,7 @@ export interface CatalogEpisode {
   description?: string;
   duration?: number | null;
   languages: string[];
+  artwork?: CatalogArtwork | null;
   thumbnail_url?: string | null;
 }
 
@@ -15,6 +22,7 @@ export interface CatalogTrailer {
   description?: string;
   duration?: number | null;
   languages: string[];
+  artwork?: CatalogArtwork | null;
   thumbnail_url?: string | null;
 }
 
@@ -31,6 +39,7 @@ export interface CatalogShow {
   synopsis?: string;
   section?: string;
   category?: string;
+  artwork?: CatalogArtwork | null;
   poster_url?: string | null;
   banner_url?: string | null;
   trailers: CatalogTrailer[];

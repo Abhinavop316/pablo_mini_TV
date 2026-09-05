@@ -9,7 +9,17 @@ from app.models.episode import Episode
 from app.models.season import Season
 from app.models.show import ItemStatus, Show
 from app.models.user import User
-from app.schemas.show import ShowCreate, ShowListItem, ShowListResponse, ShowOut, ShowUpdate
+from app.schemas.show import (
+    BulkDeleteShowsRequest,
+    BulkDeleteShowsResponse,
+    ShowCreate,
+    ShowListItem,
+    ShowListResponse,
+    ShowOut,
+    ShowUpdate,
+)
+from app.services.publishing_service import publish_catalog_atomic
+from app.services.validation_service import validate_single_show
 
 router = APIRouter(prefix="/admin/shows", tags=["Admin Shows"])
 
@@ -183,6 +193,50 @@ def update_show(
     return show
 
 
+@router.post("/batch-delete", response_model=BulkDeleteShowsResponse)
+def batch_delete_shows(
+    payload: BulkDeleteShowsRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_editor),
+):
+    if not payload.ids:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"code": "EMPTY_IDS", "message": "No show IDs provided for deletion."},
+        )
+
+    shows = db.query(Show).filter(Show.id.in_(payload.ids)).all()
+    if not shows:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"code": "SHOWS_NOT_FOUND", "message": "None of the specified shows were found."},
+        )
+
+    deleted_ids = []
+    any_published = False
+    for show in shows:
+        if show.status == ItemStatus.PUBLISHED:
+            any_published = True
+        deleted_ids.append(show.id)
+        db.delete(show)
+
+    db.commit()
+
+    if any_published:
+        publish_catalog_atomic(
+            db,
+            triggered_by=f"{current_user.email} (Batch deleted {len(deleted_ids)} shows)",
+            notes=f"Deleted show IDs: {deleted_ids}",
+        )
+
+    return BulkDeleteShowsResponse(
+        success=True,
+        deleted_count=len(deleted_ids),
+        deleted_ids=deleted_ids,
+        message=f"Successfully deleted {len(deleted_ids)} show(s).",
+    )
+
+
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_show(
     id: int,
@@ -195,6 +249,90 @@ def delete_show(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={"code": "SHOW_NOT_FOUND", "message": f"Show with id {id} not found."},
         )
+    was_published = show.status == ItemStatus.PUBLISHED
+    show_title = show.title
     db.delete(show)
     db.commit()
+
+    if was_published:
+        publish_catalog_atomic(
+            db,
+            triggered_by=f"{current_user.email} (Deleted Show: {show_title})",
+        )
+
     return None
+
+
+@router.post("/{id}/publish", response_model=ShowOut)
+def publish_single_show(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_editor),
+):
+    show = (
+        db.query(Show)
+        .options(
+            joinedload(Show.seasons).joinedload(Season.episodes).joinedload(Episode.artwork),
+            joinedload(Show.artwork),
+        )
+        .filter(Show.id == id)
+        .first()
+    )
+    if not show:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"code": "SHOW_NOT_FOUND", "message": f"Show with id {id} not found."},
+        )
+
+    # Validate the show
+    errors = validate_single_show(db, show)
+    if errors:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={
+                "code": "SHOW_VALIDATION_FAILED",
+                "message": f"Cannot publish '{show.title}': {len(errors)} validation issue(s) detected.",
+                "errors": [e.model_dump() for e in errors],
+            },
+        )
+
+    show.status = ItemStatus.PUBLISHED
+    db.commit()
+    db.refresh(show)
+
+    # Atomically build and deploy live catalogue.json
+    publish_catalog_atomic(db, triggered_by=f"{current_user.email} (Published Show: {show.title})")
+
+    return show
+
+
+@router.post("/{id}/unpublish", response_model=ShowOut)
+def unpublish_single_show(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_editor),
+):
+    show = (
+        db.query(Show)
+        .options(
+            joinedload(Show.seasons).joinedload(Season.episodes).joinedload(Episode.artwork),
+            joinedload(Show.artwork),
+        )
+        .filter(Show.id == id)
+        .first()
+    )
+    if not show:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"code": "SHOW_NOT_FOUND", "message": f"Show with id {id} not found."},
+        )
+
+    show.status = ItemStatus.DRAFT
+    db.commit()
+    db.refresh(show)
+
+    # Atomically rebuild and update live catalogue.json
+    publish_catalog_atomic(db, triggered_by=f"{current_user.email} (Unpublished Show: {show.title})")
+
+    return show
+

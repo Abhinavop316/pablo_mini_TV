@@ -227,3 +227,60 @@ def delete_episode(
     db.delete(episode)
     db.commit()
     return None
+
+
+@router.post("/admin/seasons/{season_id}/publish-all")
+def publish_all_season_episodes(
+    season_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_editor),
+):
+    season = db.query(Season).filter(Season.id == season_id).first()
+    if not season:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"code": "SEASON_NOT_FOUND", "message": f"Season with id {season_id} not found."},
+        )
+
+    episodes = (
+        db.query(Episode)
+        .options(joinedload(Episode.artwork))
+        .filter(Episode.season_id == season_id)
+        .all()
+    )
+
+    published_count = 0
+    errors = []
+
+    for ep in episodes:
+        if ep.status == ItemStatus.PUBLISHED:
+            continue
+
+        # Check duration
+        if ep.duration is None or ep.duration <= 0:
+            errors.append(f"Episode '{ep.title}' (Ep {ep.episode_number}) cannot be published: missing duration.")
+            continue
+
+        # Check thumbnail artwork
+        has_thumbnail = any(art.type == ArtworkType.THUMBNAIL for art in ep.artwork)
+        if not has_thumbnail:
+            errors.append(f"Episode '{ep.title}' (Ep {ep.episode_number}) cannot be published: missing thumbnail image.")
+            continue
+
+        ep.status = ItemStatus.PUBLISHED
+        published_count += 1
+
+    db.commit()
+
+    # If show is published, atomically refresh live catalogue
+    if season.show and season.show.status == ItemStatus.PUBLISHED:
+        from app.services.publishing_service import publish_catalog_atomic
+        publish_catalog_atomic(db, triggered_by=f"{current_user.email} (Bulk published Season {season.season_number} episodes)")
+
+    return {
+        "success": True,
+        "published_count": published_count,
+        "errors": errors,
+        "message": f"Successfully published {published_count} episode(s)." if published_count > 0 else "No episodes were published.",
+    }
+

@@ -64,3 +64,8 @@ def require_admin(current_user: User = Depends(get_current_user)) -> User:
             detail={"code": "ADMIN_REQUIRED", "message": "Only Administrators have permission to perform this action."},
         )
     return current_user
+
+
+get_current_admin = require_admin
+get_current_editor = require_editor
+

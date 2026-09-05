@@ -11,6 +11,7 @@ from app.routers import (
     admin_publish_router,
     admin_seasons_router,
     admin_shows_router,
+    admin_users_router,
     admin_validation_router,
     auth_router,
     health_router,
@@ -47,7 +48,9 @@ app.include_router(admin_episodes_router)
 app.include_router(admin_artwork_router)
 app.include_router(admin_validation_router)
 app.include_router(admin_publish_router)
+app.include_router(admin_users_router)
 app.include_router(viewer_catalog_router)
+
 
 
 @app.get("/")

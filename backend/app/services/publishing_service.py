@@ -77,6 +77,9 @@ def build_catalogue_data(db: Session) -> Dict[str, Any]:
                         "description": ep.description or "",
                         "duration": ep.duration,
                         "languages": [ep.language],
+                        "artwork": {
+                            "thumbnail": thumb_url,
+                        },
                         "thumbnail_url": thumb_url,
                     }
                 else:
@@ -86,6 +89,9 @@ def build_catalogue_data(db: Session) -> Dict[str, Any]:
                     # Keep thumbnail if missing
                     if not grouped_eps_map[cgroup]["thumbnail_url"] and thumb_url:
                         grouped_eps_map[cgroup]["thumbnail_url"] = thumb_url
+                        if "artwork" not in grouped_eps_map[cgroup] or not grouped_eps_map[cgroup]["artwork"]:
+                            grouped_eps_map[cgroup]["artwork"] = {}
+                        grouped_eps_map[cgroup]["artwork"]["thumbnail"] = thumb_url
 
             collapsed_episodes = sorted(
                 list(grouped_eps_map.values()),
@@ -102,7 +108,10 @@ def build_catalogue_data(db: Session) -> Dict[str, Any]:
                             "description": t["description"],
                             "duration": t["duration"],
                             "languages": t["languages"],
-                            "thumbnail_url": t["thumbnail_url"],
+                            "artwork": {
+                                "thumbnail": t.get("thumbnail_url"),
+                            },
+                            "thumbnail_url": t.get("thumbnail_url"),
                         }
                     )
             else:
@@ -122,8 +131,12 @@ def build_catalogue_data(db: Session) -> Dict[str, Any]:
             "synopsis": show.synopsis or "",
             "section": show.section or "General",
             "category": show.category or "General",
+            "artwork": {
+                "poster": poster_url,
+                "banner": banner_url,
+            },
             "poster_url": poster_url,
-            "banner_url": banner_url or poster_url,
+            "banner_url": banner_url,
             "trailers": trailers,
             "seasons": regular_seasons,
             "available_languages": sorted(list(all_show_languages)),
@@ -142,11 +155,50 @@ def build_catalogue_data(db: Session) -> Dict[str, Any]:
         for sec_name, shows_list in sorted(sections_map.items())
     ]
 
-    featured_show = all_catalog_shows[0] if all_catalog_shows else None
+    # Select featured show with priority for valid banner
+    featured_show = None
+    for s in all_catalog_shows:
+        if (s.get("section") or "").lower() == "featured" and s.get("artwork", {}).get("banner"):
+            featured_show = s
+            break
+    if not featured_show:
+        for s in all_catalog_shows:
+            if s.get("artwork", {}).get("banner"):
+                featured_show = s
+                break
+    if not featured_show and all_catalog_shows:
+        featured_show = all_catalog_shows[0]
 
     return {
         "published_at": datetime.now(timezone.utc).isoformat(),
         "sections": sections_list,
+        "available_sections": [
+            "featured",
+            "series",
+            "minisodes",
+            "songs",
+        ],
+        "categories": [
+            "adventure",
+            "folk",
+            "friendship",
+            "india",
+            "language",
+            "learning",
+            "maths",
+            "music",
+            "nature",
+            "reading",
+            "science",
+            "singalong",
+            "stories",
+            "travel",
+            "values",
+        ],
+        "languages": [
+            "en",
+            "hi",
+        ],
         "featured_show": featured_show,
         "all_shows": all_catalog_shows,
     }
@@ -201,8 +253,26 @@ def publish_catalog_atomic(db: Session, triggered_by: str) -> PublishRun:
             f.flush()
             os.fsync(f.fileno())
 
-        # Atomic replace
+        # Atomic replace to primary CATALOGUE_PATH
         os.replace(temp_path, catalog_path)
+
+        # Also sync to workspace root and backend storage locations
+        storage_targets = [
+            Path(__file__).resolve().parents[3] / "storage" / "catalogue.json",  # workspace root
+            Path(__file__).resolve().parents[2] / "storage" / "catalogue.json",  # backend root
+            Path(__file__).resolve().parents[1] / "storage" / "catalogue.json",  # app dir
+        ]
+        for target in storage_targets:
+            try:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                tmp = target.with_suffix(".json.tmp")
+                with open(tmp, "wb") as rf:
+                    rf.write(json_bytes)
+                    rf.flush()
+                    os.fsync(rf.fileno())
+                os.replace(tmp, target)
+            except Exception:
+                pass
 
         # 5. Complete publish run
         publish_run.status = PublishStatus.SUCCESS

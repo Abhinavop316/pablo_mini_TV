@@ -25,8 +25,10 @@ def get_catalogue(db: Session = Depends(get_db)):
 @router.get("/search", response_model=CatalogSearchResult)
 def search_catalogue(
     q: Optional[str] = Query(None, description="Search query string matching title, episode, category, synopsis"),
-    category: Optional[str] = Query(None, description="Filter by category (e.g. Drama, Animation)"),
+    category: Optional[str] = Query(None, description="Filter by category / genre (e.g. Drama, Animation)"),
+    genre: Optional[str] = Query(None, description="Alias for category filter"),
     language: Optional[str] = Query(None, description="Filter by language (e.g. English, Hindi)"),
+    lang: Optional[str] = Query(None, description="Alias for language filter"),
     section: Optional[str] = Query(None, description="Filter by section (e.g. Trending, Originals)"),
     db: Session = Depends(get_db),
 ):
@@ -40,16 +42,24 @@ def search_catalogue(
     all_shows: List[dict] = catalog_data.get("all_shows", [])
 
     # Collect available filter options across all published shows
-    all_categories = sorted(list({s.get("category") for s in all_shows if s.get("category")}))
+    cat_set = set()
+    for s in all_shows:
+        raw_cat = s.get("category")
+        if raw_cat:
+            for item in raw_cat.split(","):
+                clean = item.strip()
+                if clean:
+                    cat_set.add(clean)
+    all_categories = sorted(list(cat_set))
     all_sections = sorted(list({s.get("section") for s in all_shows if s.get("section")}))
     all_languages = sorted(
-        list({lang for s in all_shows for lang in s.get("available_languages", []) if lang})
+        list({l for s in all_shows for l in s.get("available_languages", []) if l})
     )
 
     results = []
     q_lower = q.strip().lower() if q else ""
-    category_lower = category.strip().lower() if category else ""
-    language_lower = language.strip().lower() if language else ""
+    cat_filter = (category or genre or "").strip().lower()
+    lang_filter = (language or lang or "").strip().lower()
     section_lower = section.strip().lower() if section else ""
 
     for show in all_shows:
@@ -67,8 +77,8 @@ def search_catalogue(
             if not (match_show_title or match_synopsis or match_category or match_section or match_episodes):
                 continue
 
-        # Check category filter
-        if category_lower and (show.get("category") or "").lower() != category_lower:
+        # Check category / genre filter
+        if cat_filter and cat_filter not in (show.get("category") or "").lower():
             continue
 
         # Check section filter
@@ -76,9 +86,11 @@ def search_catalogue(
             continue
 
         # Check language filter
-        if language_lower:
+        if lang_filter:
+            lang_code_map = {"english": "en", "hindi": "hi", "en": "en", "hi": "hi"}
+            target_lang_code = lang_code_map.get(lang_filter, lang_filter)
             show_langs = [l.lower() for l in show.get("available_languages", [])]
-            if language_lower not in show_langs:
+            if target_lang_code not in show_langs and lang_filter not in show_langs:
                 continue
 
         results.append(show)

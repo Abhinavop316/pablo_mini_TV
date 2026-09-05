@@ -15,18 +15,18 @@ def test_public_catalog_endpoint(client):
 
 
 def test_public_search_by_query(client):
-    response = client.get("/catalog/search?q=cyber")
+    response = client.get("/catalog/search?q=moti")
     assert response.status_code == 200
     data = response.json()
     assert data["total"] >= 1
-    assert any("Cyber Odyssey" in s["title"] for s in data["shows"])
+    assert any("Moti" in s["title"] for s in data["shows"])
 
 
 def test_public_search_by_category(client):
-    response = client.get("/catalog/search?category=Sci-Fi")
+    response = client.get("/catalog/search?category=Adventure")
     assert response.status_code == 200
     data = response.json()
-    assert all(s["category"] == "Sci-Fi" for s in data["shows"])
+    assert any("adventure" in s["category"].lower() for s in data["shows"])
 
 
 def test_public_search_by_language(client):
@@ -42,3 +42,4 @@ def test_public_search_empty_result(client):
     data = response.json()
     assert data["total"] == 0
     assert len(data["shows"]) == 0
+

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api, API_BASE_URL } from '../api/client';
+import { api } from '../api/client';
 import type { Show, Season } from '../api/types';
 import { StatusBadge } from '../components/StatusBadge';
 import { ArtworkUploader } from '../components/ArtworkUploader';
@@ -11,9 +11,11 @@ import {
   Edit2,
   Plus,
   Trash2,
-  Clock,
-  Globe,
   Sparkles,
+  Rocket,
+  CheckCircle2,
+  AlertTriangle,
+  X,
 } from 'lucide-react';
 
 export const ShowDetailPage: React.FC = () => {
@@ -25,6 +27,12 @@ export const ShowDetailPage: React.FC = () => {
   const [newSeasonNumber, setNewSeasonNumber] = useState<number>(1);
   const [newSeasonTitle, setNewSeasonTitle] = useState('');
   const [seasonError, setSeasonError] = useState<string | null>(null);
+  const [publishFeedback, setPublishFeedback] = useState<{
+    text: string;
+    type: 'success' | 'error';
+    errors?: Array<{ entity_type: string; title: string; reason: string }>;
+  } | null>(null);
+
   const [deleteConfirm, setDeleteConfirm] = useState<{
     type: 'season' | 'episode';
     id: number;
@@ -35,6 +43,57 @@ export const ShowDetailPage: React.FC = () => {
   const { data: show, isLoading, isError, refetch } = useQuery<Show>({
     queryKey: ['admin-show-detail', id],
     queryFn: async () => (await api.get(`/admin/shows/${id}`)).data,
+  });
+
+  // Publish single show mutation
+  const publishShowMutation = useMutation({
+    mutationFn: async () => {
+      return (await api.post(`/admin/shows/${id}/publish`)).data;
+    },
+    onSuccess: (data: Show) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-show-detail', id] });
+      queryClient.invalidateQueries({ queryKey: ['admin-shows'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-shows-timeline'] });
+      setPublishFeedback({
+        text: `✓ "${data.title}" has been published live to the Viewer catalogue!`,
+        type: 'success',
+      });
+      setTimeout(() => setPublishFeedback(null), 6000);
+    },
+    onError: (err: any) => {
+      const errDetail = err.response?.data?.detail;
+      const msg = typeof errDetail === 'string' ? errDetail : errDetail?.message || 'Failed to publish show.';
+      const errorsList = errDetail?.errors || [];
+      setPublishFeedback({
+        text: msg,
+        type: 'error',
+        errors: errorsList,
+      });
+    },
+  });
+
+  // Unpublish single show mutation
+  const unpublishShowMutation = useMutation({
+    mutationFn: async () => {
+      return (await api.post(`/admin/shows/${id}/unpublish`)).data;
+    },
+    onSuccess: (data: Show) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-show-detail', id] });
+      queryClient.invalidateQueries({ queryKey: ['admin-shows'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-shows-timeline'] });
+      setPublishFeedback({
+        text: `"${data.title}" moved to Draft status and removed from live viewer feed.`,
+        type: 'success',
+      });
+      setTimeout(() => setPublishFeedback(null), 6000);
+    },
+    onError: (err: any) => {
+      const msg = err.response?.data?.detail?.message || err.response?.data?.detail || 'Failed to unpublish show.';
+      setPublishFeedback({
+        text: msg,
+        type: 'error',
+      });
+    },
   });
 
   // Seasons array
@@ -84,6 +143,52 @@ export const ShowDetailPage: React.FC = () => {
     },
   });
 
+  const toggleEpisodeStatusMutation = useMutation({
+    mutationFn: async ({ episodeId, newStatus }: { episodeId: number; newStatus: 'DRAFT' | 'PUBLISHED' }) => {
+      return (await api.patch(`/admin/episodes/${episodeId}`, { status: newStatus })).data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-show-detail', id] });
+      queryClient.invalidateQueries({ queryKey: ['admin-shows'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-validation-report'] });
+      setPublishFeedback({
+        text: `✓ Episode "${data.title}" status changed to ${data.status}.`,
+        type: 'success',
+      });
+      setTimeout(() => setPublishFeedback(null), 4000);
+    },
+    onError: (err: any) => {
+      const msg = err.response?.data?.detail?.message || err.response?.data?.detail || 'Failed to update episode status.';
+      setPublishFeedback({
+        text: msg,
+        type: 'error',
+      });
+    },
+  });
+
+  const publishAllSeasonEpisodesMutation = useMutation({
+    mutationFn: async (seasonId: number) => {
+      return (await api.post(`/admin/seasons/${seasonId}/publish-all`)).data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-show-detail', id] });
+      queryClient.invalidateQueries({ queryKey: ['admin-shows'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-validation-report'] });
+      setPublishFeedback({
+        text: `✓ ${data.message}`,
+        type: 'success',
+      });
+      setTimeout(() => setPublishFeedback(null), 5000);
+    },
+    onError: (err: any) => {
+      const msg = err.response?.data?.detail?.message || err.response?.data?.detail || 'Failed to publish season episodes.';
+      setPublishFeedback({
+        text: msg,
+        type: 'error',
+      });
+    },
+  });
+
   const handleAddSeasonSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newSeasonTitle.trim()) {
@@ -124,38 +229,183 @@ export const ShowDetailPage: React.FC = () => {
   return (
     <div>
       {/* Top Breadcrumb & Actions */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <Link
           to="/admin/shows"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            color: 'var(--text-secondary)',
+            color: '#543488',
             fontSize: '13px',
+            fontWeight: 700,
+            fontFamily: 'var(--font-heading)',
           }}
         >
           <ArrowLeft size={16} /> Back to Shows Catalogue
         </Link>
-        <Link
-          to={`/admin/shows/${show.id}/edit`}
+
+        {/* Action CTAs: Publish / Unpublish Show & Edit Show */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          {show.status === 'DRAFT' ? (
+            <button
+              type="button"
+              onClick={() => publishShowMutation.mutate()}
+              disabled={publishShowMutation.isPending}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '9px 20px',
+                borderRadius: 'var(--radius-full)',
+                background: 'linear-gradient(135deg, #059669, #10b981)',
+                color: '#ffffff',
+                fontSize: '13px',
+                fontWeight: 800,
+                fontFamily: 'var(--font-heading)',
+                border: 'none',
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+                cursor: publishShowMutation.isPending ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => !publishShowMutation.isPending && (e.currentTarget.style.transform = 'translateY(-2px)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
+            >
+              <Rocket size={15} />
+              {publishShowMutation.isPending ? 'Publishing Show...' : 'Publish This Show'}
+            </button>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => publishShowMutation.mutate()}
+                disabled={publishShowMutation.isPending}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 16px',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'linear-gradient(135deg, #543488, #7c3aed)',
+                  color: '#ffffff',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  fontFamily: 'var(--font-heading)',
+                  border: 'none',
+                  boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
+                  cursor: publishShowMutation.isPending ? 'not-allowed' : 'pointer',
+                }}
+              >
+                <Sparkles size={14} />
+                {publishShowMutation.isPending ? 'Syncing...' : 'Sync / Re-publish'}
+              </button>
+              <button
+                type="button"
+                onClick={() => unpublishShowMutation.mutate()}
+                disabled={unpublishShowMutation.isPending}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 14px',
+                  borderRadius: 'var(--radius-full)',
+                  backgroundColor: '#fff7ed',
+                  border: '1.5px solid #fdba74',
+                  color: '#c2410c',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  fontFamily: 'var(--font-heading)',
+                  cursor: unpublishShowMutation.isPending ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {unpublishShowMutation.isPending ? 'Unpublishing...' : 'Unpublish (Draft)'}
+              </button>
+            </div>
+          )}
+
+          <Link
+            to={`/admin/shows/${show.id}/edit`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '8px 18px',
+              borderRadius: 'var(--radius-full)',
+              backgroundColor: '#ffffff',
+              border: '1.5px solid rgba(84, 52, 136, 0.25)',
+              color: '#543488',
+              fontSize: '13px',
+              fontWeight: 700,
+              fontFamily: 'var(--font-heading)',
+            }}
+          >
+            <Edit2 size={14} />
+            Edit Show Metadata
+          </Link>
+        </div>
+      </div>
+
+      {/* Publish Feedback Alert Banner */}
+      {publishFeedback && (
+        <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '8px 16px',
+            padding: '16px 20px',
             borderRadius: 'var(--radius-md)',
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            color: 'var(--text-primary)',
-            fontSize: '13px',
-            fontWeight: 500,
+            marginBottom: '24px',
+            backgroundColor: publishFeedback.type === 'success' ? '#ecfdf5' : '#fff1f2',
+            border: `2px solid ${publishFeedback.type === 'success' ? '#10b981' : '#f43f5e'}`,
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '12px',
+            animation: 'fadeInUp 0.2s ease',
           }}
         >
-          <Edit2 size={14} />
-          Edit Show Metadata
-        </Link>
-      </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+            {publishFeedback.type === 'success' ? (
+              <CheckCircle2 size={20} color="#059669" style={{ flexShrink: 0, marginTop: '2px' }} />
+            ) : (
+              <AlertTriangle size={20} color="#e11d48" style={{ flexShrink: 0, marginTop: '2px' }} />
+            )}
+            <div>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  color: publishFeedback.type === 'success' ? '#065f46' : '#9f1239',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                {publishFeedback.text}
+              </p>
+              {publishFeedback.errors && publishFeedback.errors.length > 0 && (
+                <ul style={{ margin: '8px 0 0 18px', padding: 0, fontSize: '13px', color: '#be123c' }}>
+                  {publishFeedback.errors.map((err, idx) => (
+                    <li key={idx} style={{ marginBottom: '4px' }}>
+                      {err.reason}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setPublishFeedback(null)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: publishFeedback.type === 'success' ? '#059669' : '#e11d48',
+              cursor: 'pointer',
+              padding: '4px',
+            }}
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Show Overview Header Banner */}
       <div
@@ -227,9 +477,9 @@ export const ShowDetailPage: React.FC = () => {
           padding: '24px',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '14px' }}>
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
               Seasons & Episodes
             </h2>
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
@@ -242,16 +492,12 @@ export const ShowDetailPage: React.FC = () => {
               setNewSeasonNumber(seasons.length > 0 ? Math.max(...seasons.map((s) => s.season_number)) + 1 : 1);
               setShowAddSeasonModal(true);
             }}
+            className="btn-peblo-primary"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--accent)',
-              color: '#fff',
+              padding: '9px 18px',
               fontSize: '13px',
-              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
             }}
           >
             <Plus size={16} /> Add Season
@@ -265,13 +511,11 @@ export const ShowDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowAddSeasonModal(true)}
+              className="btn-peblo-primary"
               style={{
-                padding: '8px 16px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--accent)',
-                color: '#fff',
+                padding: '9px 18px',
                 fontSize: '13px',
-                fontWeight: 600,
+                whiteSpace: 'nowrap',
               }}
             >
               Create Season 1 or Season 0 (Trailer)
@@ -288,6 +532,7 @@ export const ShowDetailPage: React.FC = () => {
                 paddingBottom: '12px',
                 marginBottom: '20px',
                 overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
               }}
             >
               {seasons.map((season) => {
@@ -304,27 +549,28 @@ export const ShowDetailPage: React.FC = () => {
                       alignItems: 'center',
                       gap: '8px',
                       padding: '8px 16px',
-                      borderRadius: 'var(--radius-md)',
+                      borderRadius: 'var(--radius-full)',
                       fontSize: '13px',
                       fontWeight: 600,
                       backgroundColor: isActive
                         ? isTrailer
                           ? 'rgba(245, 158, 11, 0.15)'
-                          : 'var(--accent-bg)'
+                          : 'var(--peblo-purple)'
                         : 'var(--bg-card)',
                       color: isActive
                         ? isTrailer
                           ? 'var(--warning)'
-                          : 'var(--accent-light)'
+                          : '#ffffff'
                         : 'var(--text-secondary)',
-                      border: `1px solid ${
+                      border: `1.5px solid ${
                         isActive
                           ? isTrailer
                             ? 'rgba(245, 158, 11, 0.5)'
-                            : 'var(--accent-border)'
+                            : 'var(--peblo-purple)'
                           : 'var(--border)'
                       }`,
                       whiteSpace: 'nowrap',
+                      flexShrink: 0,
                     }}
                   >
                     {isTrailer && <Sparkles size={14} />}
@@ -334,8 +580,9 @@ export const ShowDetailPage: React.FC = () => {
                         padding: '1px 6px',
                         borderRadius: 'var(--radius-full)',
                         fontSize: '11px',
-                        backgroundColor: 'var(--bg-primary)',
-                        color: 'var(--text-muted)',
+                        fontWeight: 700,
+                        backgroundColor: isActive ? 'rgba(255, 255, 255, 0.2)' : 'rgba(84, 52, 136, 0.08)',
+                        color: isActive ? '#ffffff' : 'var(--text-primary)',
                       }}
                     >
                       {season.episodes?.length || 0}
@@ -348,9 +595,9 @@ export const ShowDetailPage: React.FC = () => {
             {/* Active Season Info & Episodes */}
             {activeSeason && (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
                   <div>
-                    <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    <h3 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--text-primary)' }}>
                       {activeSeason.season_number === 0
                         ? 'Season 0 — Official Trailers & Teasers'
                         : `Season ${activeSeason.season_number}: ${activeSeason.title}`}
@@ -361,19 +608,43 @@ export const ShowDetailPage: React.FC = () => {
                       </p>
                     )}
                   </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                    {activeSeason.episodes?.some((ep) => ep.status === 'DRAFT') && (
+                      <button
+                        type="button"
+                        onClick={() => publishAllSeasonEpisodesMutation.mutate(activeSeason.id)}
+                        disabled={publishAllSeasonEpisodesMutation.isPending}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: 'var(--radius-full)',
+                          background: 'linear-gradient(135deg, #059669, #10b981)',
+                          color: '#ffffff',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          border: 'none',
+                          boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)',
+                          cursor: publishAllSeasonEpisodesMutation.isPending ? 'not-allowed' : 'pointer',
+                          whiteSpace: 'nowrap',
+                          flexShrink: 0,
+                        }}
+                      >
+                        <Rocket size={13} />
+                        {publishAllSeasonEpisodesMutation.isPending
+                          ? 'Publishing...'
+                          : `Publish All Draft Episodes (${activeSeason.episodes.filter((ep) => ep.status === 'DRAFT').length})`}
+                      </button>
+                    )}
                     <Link
-                      to={`/admin/episodes/new?season_id=${activeSeason.id}`}
+                      to={`/admin/episodes/new?season_id=${activeSeason.id}&title=${encodeURIComponent(show.title)}&season=${activeSeason.season_number}&episode=${(activeSeason.episodes?.length || 0) + 1}`}
+                      className="btn-peblo-primary"
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '7px 14px',
-                        borderRadius: 'var(--radius-md)',
-                        backgroundColor: 'var(--accent)',
-                        color: '#fff',
+                        padding: '8px 14px',
                         fontSize: '13px',
-                        fontWeight: 600,
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
                       }}
                     >
                       <Plus size={15} /> Add Episode
@@ -381,132 +652,210 @@ export const ShowDetailPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleDeleteSeason(activeSeason.id, activeSeason.title)}
+                      title="Delete Season"
                       style={{
-                        padding: '7px 12px',
+                        padding: '8px 12px',
                         borderRadius: 'var(--radius-md)',
-                        border: '1px solid var(--border)',
-                        color: 'var(--danger)',
+                        border: '1.5px solid rgba(84, 52, 136, 0.2)',
+                        color: 'var(--peblo-purple)',
+                        backgroundColor: '#fff',
                         fontSize: '13px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
                       }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(84, 52, 136, 0.08)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff')}
                     >
                       <Trash2 size={15} />
                     </button>
                   </div>
                 </div>
 
-                {/* Episodes Table */}
-                <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
-                    <thead>
-                      <tr style={{ backgroundColor: 'var(--bg-card)', borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
-                        <th style={{ padding: '12px 16px', width: '60px' }}>#</th>
-                        <th style={{ padding: '12px 16px' }}>Episode</th>
-                        <th style={{ padding: '12px 16px' }}>Language</th>
-                        <th style={{ padding: '12px 16px' }}>Content Group</th>
-                        <th style={{ padding: '12px 16px' }}>Duration</th>
-                        <th style={{ padding: '12px 16px' }}>Thumbnail</th>
-                        <th style={{ padding: '12px 16px' }}>Status</th>
-                        <th style={{ padding: '12px 16px', textAlign: 'right' }}>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(!activeSeason.episodes || activeSeason.episodes.length === 0) ? (
-                        <tr>
-                          <td colSpan={8} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                            No episodes in this season yet.
-                          </td>
-                        </tr>
-                      ) : (
-                        activeSeason.episodes.map((ep) => {
-                          const thumb = ep.artwork?.find((a) => a.type === 'THUMBNAIL');
-                          const thumbUrl = thumb ? (thumb.url.startsWith('http') ? thumb.url : `${API_BASE_URL}${thumb.url}`) : null;
-                          const mins = ep.duration ? Math.floor(ep.duration / 60) : null;
-                          const secs = ep.duration ? ep.duration % 60 : null;
+                {/* Clean Episode List: Episode Number, Name, Status, Language, Duration & Actions */}
+                {(!activeSeason.episodes || activeSeason.episodes.length === 0) ? (
+                  <div style={{ padding: '36px 20px', textAlign: 'center', backgroundColor: '#fff', border: '1px dashed var(--border)', borderRadius: 'var(--radius-md)' }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '12px' }}>
+                      No episodes in {activeSeason.season_number === 0 ? 'trailers' : `Season ${activeSeason.season_number}`} yet.
+                    </p>
+                    <Link
+                      to={`/admin/episodes/new?season_id=${activeSeason.id}&title=${encodeURIComponent(show.title)}&season=${activeSeason.season_number}&episode=1`}
+                      className="btn-peblo-primary"
+                      style={{ padding: '8px 16px', fontSize: '13px', display: 'inline-flex' }}
+                    >
+                      <Plus size={15} /> Add Episode 1
+                    </Link>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {activeSeason.episodes.map((ep) => {
+                      const editUrl = `/admin/episodes/${ep.id}/edit?title=${encodeURIComponent(show.title)}&season=${activeSeason.season_number}&episode=${ep.episode_number}`;
+                      const isPublished = ep.status === 'PUBLISHED';
+                      const durMins = ep.duration ? Math.floor(ep.duration / 60) : 0;
+                      const durSecs = ep.duration ? ep.duration % 60 : 0;
 
-                          return (
-                            <tr
-                              key={ep.id}
-                              style={{ borderBottom: '1px solid var(--border)' }}
-                              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)')}
-                              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                      return (
+                        <div
+                          key={ep.id}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '12px 16px',
+                            backgroundColor: '#ffffff',
+                            border: isPublished ? '1.5px solid var(--border)' : '1.5px dashed rgba(245, 158, 11, 0.4)',
+                            borderRadius: 'var(--radius-md)',
+                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                            boxShadow: '0 2px 6px rgba(84, 52, 136, 0.03)',
+                            flexWrap: 'wrap',
+                            gap: '12px',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--peblo-purple)';
+                            e.currentTarget.style.transform = 'translateY(-1px)';
+                            e.currentTarget.style.boxShadow = '0 6px 16px rgba(84, 52, 136, 0.08)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = isPublished ? 'var(--border)' : 'rgba(245, 158, 11, 0.4)';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 2px 6px rgba(84, 52, 136, 0.03)';
+                          }}
+                        >
+                          {/* Left: Episode Number & Name Link */}
+                          <Link
+                            to={editUrl}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '12px',
+                              flex: '1 1 260px',
+                              overflow: 'hidden',
+                              textDecoration: 'none',
+                            }}
+                          >
+                            <span
+                              style={{
+                                padding: '4px 10px',
+                                borderRadius: 'var(--radius-full)',
+                                backgroundColor: isPublished ? 'rgba(84, 52, 136, 0.08)' : 'rgba(245, 158, 11, 0.1)',
+                                color: isPublished ? 'var(--peblo-purple)' : '#b45309',
+                                fontSize: '12px',
+                                fontWeight: 800,
+                                fontFamily: 'var(--font-heading)',
+                                flexShrink: 0,
+                              }}
                             >
-                              <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-muted)' }}>
-                                {ep.episode_number}
-                              </td>
-                              <td style={{ padding: '12px 16px' }}>
-                                <Link
-                                  to={`/admin/episodes/${ep.id}/edit`}
-                                  style={{ fontWeight: 600, color: 'var(--text-primary)' }}
-                                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-light)')}
-                                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
-                                >
-                                  {ep.title}
-                                </Link>
-                                {ep.description && (
-                                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px', maxWidth: '280px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {ep.description}
-                                  </p>
-                                )}
-                              </td>
-                              <td style={{ padding: '12px 16px' }}>
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '4px', backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border)', fontSize: '12px' }}>
-                                  <Globe size={12} /> {ep.language}
-                                </span>
-                              </td>
-                              <td style={{ padding: '12px 16px' }}>
-                                <code style={{ fontSize: '11px', color: 'var(--accent-light)', background: 'var(--accent-bg)', padding: '2px 6px', borderRadius: '4px' }}>
-                                  {ep.content_group}
-                                </code>
-                              </td>
-                              <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>
-                                {ep.duration ? (
-                                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <Clock size={12} /> {mins}m {secs ? `${secs}s` : ''}
-                                  </span>
-                                ) : (
-                                  <span style={{ color: 'var(--danger)', fontSize: '11px' }}>Missing</span>
-                                )}
-                              </td>
-                              <td style={{ padding: '12px 16px' }}>
-                                {thumbUrl ? (
-                                  <img
-                                    src={thumbUrl}
-                                    alt=""
-                                    style={{ width: '48px', height: '27px', borderRadius: '3px', objectFit: 'cover' }}
-                                  />
-                                ) : (
-                                  <span style={{ color: 'var(--danger)', fontSize: '11px' }}>Missing</span>
-                                )}
-                              </td>
-                              <td style={{ padding: '12px 16px' }}>
-                                <StatusBadge status={ep.status} />
-                              </td>
-                              <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                                <div style={{ display: 'inline-flex', gap: '6px' }}>
-                                  <Link
-                                    to={`/admin/episodes/${ep.id}/edit`}
-                                    style={{ padding: '5px', color: 'var(--text-secondary)' }}
-                                    title="Edit Episode"
-                                  >
-                                    <Edit2 size={15} />
-                                  </Link>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteEpisode(ep.id, ep.title)}
-                                    style={{ padding: '5px', color: 'var(--text-muted)' }}
-                                    title="Delete Episode"
-                                  >
-                                    <Trash2 size={15} />
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                              Episode {ep.episode_number}
+                            </span>
+                            <span
+                              style={{
+                                fontSize: '14px',
+                                fontWeight: 700,
+                                color: 'var(--text-primary)',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {ep.title || `Episode ${ep.episode_number}`}
+                            </span>
+                          </Link>
+
+                          {/* Middle: Badges (Status, Language, Duration) */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                            <StatusBadge status={ep.status} />
+                            <span
+                              style={{
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                padding: '3px 8px',
+                                borderRadius: 'var(--radius-full)',
+                                backgroundColor: 'rgba(84, 52, 136, 0.08)',
+                                color: '#543488',
+                              }}
+                            >
+                              {ep.language?.toUpperCase() || 'EN'}
+                            </span>
+                            {ep.duration && ep.duration > 0 ? (
+                              <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>
+                                {durMins}m {durSecs}s
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 700 }}>
+                                Missing duration
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Right: Actions */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                            {/* Quick Publish / Unpublish Button */}
+                            <button
+                              type="button"
+                              onClick={() =>
+                                toggleEpisodeStatusMutation.mutate({
+                                  episodeId: ep.id,
+                                  newStatus: isPublished ? 'DRAFT' : 'PUBLISHED',
+                                })
+                              }
+                              disabled={toggleEpisodeStatusMutation.isPending}
+                              style={{
+                                padding: '6px 12px',
+                                borderRadius: 'var(--radius-sm)',
+                                backgroundColor: isPublished ? 'rgba(84, 52, 136, 0.08)' : 'linear-gradient(135deg, #059669, #10b981)',
+                                background: isPublished ? 'rgba(84, 52, 136, 0.08)' : 'linear-gradient(135deg, #059669, #10b981)',
+                                color: isPublished ? '#543488' : '#ffffff',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                border: 'none',
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease',
+                              }}
+                              title={isPublished ? 'Move episode to draft' : 'Publish episode live'}
+                            >
+                              {isPublished ? 'Unpublish' : 'Publish'}
+                            </button>
+
+                            <Link
+                              to={editUrl}
+                              style={{
+                                padding: '6px 12px',
+                                borderRadius: 'var(--radius-sm)',
+                                backgroundColor: 'rgba(84, 52, 136, 0.06)',
+                                color: 'var(--peblo-purple)',
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                              }}
+                            >
+                              <Edit2 size={13} /> Edit
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteEpisode(ep.id, ep.title)}
+                              title="Delete Episode"
+                              style={{
+                                padding: '6px',
+                                borderRadius: 'var(--radius-sm)',
+                                color: 'var(--text-muted)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.color = '#ef4444')}
+                              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
           </div>

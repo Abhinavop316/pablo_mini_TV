@@ -10,6 +10,7 @@ class CatalogEpisode(BaseModel):
     description: Optional[str] = None
     duration: Optional[int] = None
     languages: List[str] = []
+    artwork: Optional[Dict[str, Optional[str]]] = None
     thumbnail_url: Optional[str] = None
 
 
@@ -19,6 +20,7 @@ class CatalogTrailer(BaseModel):
     description: Optional[str] = None
     duration: Optional[int] = None
     languages: List[str] = []
+    artwork: Optional[Dict[str, Optional[str]]] = None
     thumbnail_url: Optional[str] = None
 
 
@@ -35,6 +37,7 @@ class CatalogShow(BaseModel):
     synopsis: Optional[str] = None
     section: Optional[str] = None
     category: Optional[str] = None
+    artwork: Optional[Dict[str, Optional[str]]] = None
     poster_url: Optional[str] = None
     banner_url: Optional[str] = None
     trailers: List[CatalogTrailer] = []

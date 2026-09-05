@@ -48,3 +48,26 @@ def test_valid_thumbnail_validation():
     assert w == 640
     assert h == 360
     assert abs(ratio - (16 / 9)) < 0.05
+
+
+def test_upload_artwork_endpoint_validate_and_save(client, editor_token, db_session):
+    from app.models.show import Show
+    show = db_session.query(Show).first()
+    assert show is not None
+
+    img_bytes = create_test_image(600, 900)
+    files = {"file": ("poster.jpg", img_bytes, "image/jpeg")}
+    data = {"artwork_type": "POSTER", "show_id": show.id}
+
+    response = client.post(
+        "/admin/artwork/validate-and-save",
+        files=files,
+        data=data,
+        headers={"Authorization": f"Bearer {editor_token}"},
+    )
+    assert response.status_code == 201
+    res_data = response.json()
+    assert res_data["type"] == "POSTER"
+    assert res_data["show_id"] == show.id
+
+

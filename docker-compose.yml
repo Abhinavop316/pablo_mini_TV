@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Relational Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: peblo_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: pablo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pablo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. FastAPI Backend & Publishing Engine
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: peblo_backend
+    restart: always
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - SECRET_KEY=peblo_super_secret_jwt_key_2026_change_in_production
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      - DB_USER=postgres
+      - DB_PASSWORD=postgrespassword
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=pablo_db
+      - DATABASE_URL=postgresql+psycopg://postgres:postgrespassword@postgres:5432/pablo_db
+      - STORAGE_TYPE=local
+      - UPLOAD_DIR=uploads
+      - CATALOGUE_PATH=storage/catalogue.json
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 3. CMS Frontend (Admin & Editor)
+  cms:
+    build:
+      context: ./adminAndEditor
+      dockerfile: Dockerfile
+    container_name: peblo_cms
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+  # 4. Viewer Frontend (Kids Streaming UI)
+  viewer:
+    build:
+      context: ./Viewer
+      dockerfile: Dockerfile
+    container_name: peblo_viewer
+    restart: always
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

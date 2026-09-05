@@ -55,3 +55,14 @@ class ShowListResponse(BaseModel):
     page: int
     page_size: int
     total_pages: int
+
+
+class BulkDeleteShowsRequest(BaseModel):
+    ids: List[int] = Field(..., min_length=1)
+
+
+class BulkDeleteShowsResponse(BaseModel):
+    success: bool
+    deleted_count: int
+    deleted_ids: List[int]
+    message: str
