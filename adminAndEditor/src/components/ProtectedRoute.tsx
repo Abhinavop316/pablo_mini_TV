@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requireAdmin = f
   const { isAuthenticated, isAdmin, isLoading } = useAuth();
 
   if (isLoading) {
-    return <PebloLoader text="Loading application..." minHeight="80vh" size={68} />;
+    return <PebloLoader text="Loading application..." minHeight="80vh" size="lg" />;
   }
 
   if (!isAuthenticated) {

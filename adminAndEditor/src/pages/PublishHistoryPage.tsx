@@ -1403,7 +1403,7 @@ export const PublishHistoryPage: React.FC = () => {
                 {runsLoading ? (
                   <tr>
                     <td colSpan={6} style={{ padding: '40px', textAlign: 'center' }}>
-                      <PebloLoader text="Loading release log..." minHeight="160px" size={48} />
+                      <PebloLoader text="Loading release log..." minHeight="160px" size="sm" />
                     </td>
                   </tr>
                 ) : runs.map((run, idx) => {

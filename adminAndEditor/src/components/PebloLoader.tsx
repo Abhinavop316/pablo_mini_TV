@@ -2,7 +2,7 @@ import React from 'react';
 
 interface PebloLoaderProps {
   text?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | number;
   layout?: 'vertical' | 'horizontal';
   minHeight?: string | number;
   style?: React.CSSProperties;
@@ -15,27 +15,28 @@ export const PebloLoader: React.FC<PebloLoaderProps> = ({
   minHeight = '200px',
   style,
 }) => {
-  const logoHeights = {
+  const logoHeights: Record<'sm' | 'md' | 'lg', string> = {
     sm: '32px',
     md: '48px',
     lg: '64px',
   };
 
-  const shadowWidths = {
+  const shadowWidths: Record<'sm' | 'md' | 'lg', string> = {
     sm: '36px',
     md: '54px',
     lg: '72px',
   };
 
-  const fontSizes = {
+  const fontSizes: Record<'sm' | 'md' | 'lg', string> = {
     sm: '13px',
     md: '14px',
     lg: '16px',
   };
 
-  const logoH = logoHeights[size];
-  const shadowW = shadowWidths[size];
-  const fontS = fontSizes[size];
+  const isNumeric = typeof size === 'number';
+  const logoH = isNumeric ? `${size}px` : logoHeights[size] || logoHeights.md;
+  const shadowW = isNumeric ? `${Math.round(size * 1.1)}px` : shadowWidths[size] || shadowWidths.md;
+  const fontS = isNumeric ? (size < 40 ? '13px' : '15px') : fontSizes[size] || fontSizes.md;
 
   return (
     <div
