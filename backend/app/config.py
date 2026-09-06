@@ -38,6 +38,15 @@ class Settings(BaseSettings):
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
 
+    @field_validator("DATABASE_URL", mode="after")
+    @classmethod
+    def normalize_database_url(cls, v: str) -> str:
+        if v.startswith("postgres://"):
+            return "postgresql+psycopg://" + v[len("postgres://") :]
+        if v.startswith("postgresql://") and not v.startswith("postgresql+"):
+            return "postgresql+psycopg://" + v[len("postgresql://") :]
+        return v
+
     @field_validator("UPLOAD_DIR", mode="after")
     @classmethod
     def resolve_upload_dir(cls, v: str) -> str:

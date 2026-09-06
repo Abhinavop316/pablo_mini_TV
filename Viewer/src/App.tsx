@@ -16,6 +16,18 @@ const queryClient = new QueryClient({
   },
 });
 
+const RedirectToAdminSetup: React.FC = () => {
+  React.useEffect(() => {
+    window.location.href = `http://localhost:5174/setup-password${window.location.search}`;
+  }, []);
+  return (
+    <div style={{ padding: '4rem', textAlign: 'center', fontFamily: 'system-ui, sans-serif' }}>
+      <h2>Redirecting to Editor & Admin Portal...</h2>
+      <p>Please wait while we redirect you to set your credentials.</p>
+    </div>
+  );
+};
+
 export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -25,6 +37,7 @@ export const App: React.FC = () => {
           <main style={{ flex: 1 }}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/setup-password" element={<RedirectToAdminSetup />} />
               <Route path="/shows" element={<SearchPage />} />
               <Route path="/show" element={<SearchPage />} />
               <Route path="/search" element={<Navigate to="/shows" replace />} />
