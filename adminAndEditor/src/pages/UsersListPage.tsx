@@ -42,7 +42,14 @@ export const UsersListPage: React.FC = () => {
 
   // Modal States
   const [isInviteOpen, setIsInviteOpen] = useState(false);
-  const [successInviteData, setSuccessInviteData] = useState<{ userId: number; name?: string | null; email: string; url: string; expiresAt?: string } | null>(null);
+  const [successInviteData, setSuccessInviteData] = useState<{
+    userId: number;
+    name?: string | null;
+    email: string;
+    url: string;
+    token?: string;
+    expiresAt?: string;
+  } | null>(null);
   const [deleteTargetUser, setDeleteTargetUser] = useState<UserItem | null>(null);
 
   // Form State
@@ -51,6 +58,18 @@ export const UsersListPage: React.FC = () => {
   const [inviteRole, setInviteRole] = useState<'EDITOR' | 'ADMIN'>('EDITOR');
   const [inviteError, setInviteError] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
+
+  // Helper to compute a working link matching current domain
+  const getDynamicSetupUrl = (rawUrl: string, token?: string) => {
+    if (token) {
+      return `${window.location.origin}/setup-password?token=${token}`;
+    }
+    if (rawUrl && rawUrl.includes('token=')) {
+      const tokenPart = rawUrl.split('token=')[1];
+      return `${window.location.origin}/setup-password?token=${tokenPart}`;
+    }
+    return rawUrl;
+  };
 
   // Lock background scroll when any modal is open
   useEffect(() => {
@@ -92,6 +111,7 @@ export const UsersListPage: React.FC = () => {
           name: data.name,
           email: data.email,
           url: data.setup_url,
+          token: data.setup_token || undefined,
           expiresAt: data.expires_at || undefined,
         });
       }
@@ -144,6 +164,7 @@ export const UsersListPage: React.FC = () => {
         name: data.name,
         email: data.email,
         url: data.setup_url,
+        token: data.setup_token || undefined,
         expiresAt: data.expires_at,
       });
     },
@@ -222,9 +243,10 @@ export const UsersListPage: React.FC = () => {
   const pendingCount = usersList.filter((u) => !u.is_verified || u.has_pending_setup).length;
   const activeCount = usersList.filter((u) => u.is_active && u.is_verified).length;
 
-  const handleCopyLink = () => {
-    if (successInviteData?.url) {
-      navigator.clipboard.writeText(successInviteData.url);
+  const handleCopyLink = (targetUrl?: string) => {
+    const urlToCopy = targetUrl || (successInviteData ? getDynamicSetupUrl(successInviteData.url, successInviteData.token) : '');
+    if (urlToCopy) {
+      navigator.clipboard.writeText(urlToCopy);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2500);
     }
@@ -1119,12 +1141,7 @@ export const UsersListPage: React.FC = () => {
           <div
             style={{
               position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              width: '100vw',
-              height: '100vh',
+              inset: 0,
               backgroundColor: 'rgba(45, 24, 76, 0.65)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
@@ -1132,9 +1149,10 @@ export const UsersListPage: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'center',
               zIndex: 999999,
-              padding: '20px',
+              padding: '16px',
               margin: 0,
               boxSizing: 'border-box',
+              overflowY: 'auto',
             }}
             onClick={() => setIsInviteOpen(false)}
           >
@@ -1517,12 +1535,7 @@ export const UsersListPage: React.FC = () => {
           <div
             style={{
               position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              width: '100vw',
-              height: '100vh',
+              inset: 0,
               backgroundColor: 'rgba(45, 24, 76, 0.65)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
@@ -1530,174 +1543,175 @@ export const UsersListPage: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'center',
               zIndex: 999999,
-              padding: '20px',
+              padding: '16px',
               margin: 0,
               boxSizing: 'border-box',
+              overflowY: 'auto',
             }}
             onClick={() => setSuccessInviteData(null)}
           >
-            <div
-              className="animate-fade-in"
-              style={{
-                width: '100%',
-                maxWidth: '520px',
-                backgroundColor: '#ffffff',
-                borderRadius: '26px',
-                padding: '32px',
-                boxShadow: '0 25px 60px -15px rgba(84, 52, 136, 0.4)',
-                border: '2px solid rgba(84, 52, 136, 0.2)',
-                textAlign: 'center',
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Animated Check Illustration */}
-              <div
-                style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 16px',
-                  color: '#ffffff',
-                  boxShadow: '0 8px 24px rgba(5, 150, 105, 0.35)',
-                }}
-              >
-                <Check size={34} strokeWidth={3} />
-              </div>
-
-              <h3
-                style={{
-                  fontSize: '22px',
-                  color: '#543488',
-                  fontWeight: 800,
-                  margin: '0 0 6px',
-                  fontFamily: 'var(--font-heading)',
-                }}
-              >
-                Invitation Sent! 🎉
-              </h3>
-              <p style={{ color: 'rgba(84, 52, 136, 0.8)', fontSize: '14px', lineHeight: 1.5, marginBottom: '18px' }}>
-                Setup invitation sent to <strong style={{ color: '#543488' }}>{successInviteData.email}</strong>. The recipient can click the link in their inbox to choose their unique username and activate their account.
-              </p>
-
-              {/* Email Dispatch Info Box */}
-              <div
-                style={{
-                  backgroundColor: 'rgba(5, 150, 105, 0.08)',
-                  border: '1.5px solid rgba(5, 150, 105, 0.25)',
-                  borderRadius: '14px',
-                  padding: '12px 16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  textAlign: 'left',
-                  marginBottom: '16px',
-                }}
-              >
-                <Mail size={20} color="#059669" style={{ flexShrink: 0 }} />
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: '13px', color: '#065f46', fontFamily: 'var(--font-heading)' }}>
-                    Email Delivered to Recipient
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#047857', marginTop: '2px' }}>
-                    The recipient can verify their email and set their password directly.
-                  </div>
-                </div>
-              </div>
-
-              {/* Direct Backup URL Box */}
-              <div
-                style={{
-                  backgroundColor: 'rgba(84, 52, 136, 0.04)',
-                  border: '1.5px solid rgba(84, 52, 136, 0.15)',
-                  borderRadius: '14px',
-                  padding: '12px 14px',
-                  marginBottom: '16px',
-                  textAlign: 'left',
-                }}
-              >
-                <label
+            {(() => {
+              const liveUrl = getDynamicSetupUrl(successInviteData.url, successInviteData.token);
+              return (
+                <div
+                  className="animate-fade-in"
                   style={{
-                    fontSize: '11px',
-                    fontWeight: 800,
-                    color: '#543488',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    display: 'block',
-                    marginBottom: '6px',
-                    fontFamily: 'var(--font-heading)',
+                    width: '100%',
+                    maxWidth: '480px',
+                    backgroundColor: '#ffffff',
+                    borderRadius: '24px',
+                    padding: '28px 24px',
+                    boxShadow: '0 25px 60px -15px rgba(84, 52, 136, 0.4)',
+                    border: '2px solid rgba(84, 52, 136, 0.2)',
+                    textAlign: 'center',
+                    margin: 'auto',
                   }}
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  Setup Link (Backup Copy):
-                </label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="text"
-                    readOnly
-                    value={successInviteData.url}
-                    className="input-field"
+                  {/* Animated Check Illustration */}
+                  <div
                     style={{
-                      width: '100%',
-                      backgroundColor: '#ffffff',
-                      fontSize: '12px',
-                      fontFamily: 'monospace',
-                      borderRadius: '8px',
-                      height: '36px',
-                    }}
-                  />
-                  <button
-                    onClick={handleCopyLink}
-                    className="btn-peblo-primary"
-                    style={{
+                      width: '58px',
+                      height: '58px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '5px',
-                      whiteSpace: 'nowrap',
-                      padding: '6px 14px',
-                      fontSize: '12px',
-                      height: '36px',
+                      justifyContent: 'center',
+                      margin: '0 auto 14px',
+                      color: '#ffffff',
+                      boxShadow: '0 8px 24px rgba(5, 150, 105, 0.35)',
                     }}
                   >
-                    {copiedLink ? <Check size={14} /> : <Copy size={14} />}
-                    {copiedLink ? 'Copied!' : 'Copy'}
-                  </button>
-                </div>
-              </div>
+                    <Check size={30} strokeWidth={3} />
+                  </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <button
-                    onClick={() => resendEmailMutation.mutate(successInviteData.userId)}
-                    disabled={resendEmailMutation.isPending}
-                    className="btn-peblo-outline"
-                    style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', padding: '8px 14px' }}
+                  <h3
+                    style={{
+                      fontSize: '21px',
+                      color: '#543488',
+                      fontWeight: 800,
+                      margin: '0 0 6px',
+                      fontFamily: 'var(--font-heading)',
+                    }}
                   >
-                    <Mail size={13} />
-                    {resendEmailMutation.isPending ? 'Resending...' : 'Resend Email'}
-                  </button>
-                  <a
-                    href={successInviteData.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-peblo-outline"
-                    style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', padding: '8px 14px' }}
-                  >
-                    <ExternalLink size={13} /> Open
-                  </a>
-                </div>
+                    Invitation Sent! 🎉
+                  </h3>
+                  <p style={{ color: 'rgba(84, 52, 136, 0.8)', fontSize: '13.5px', lineHeight: 1.5, marginBottom: '18px' }}>
+                    Setup invitation sent to <strong style={{ color: '#543488' }}>{successInviteData.email}</strong>.
+                  </p>
 
-                <button
-                  onClick={() => setSuccessInviteData(null)}
-                  className="btn-peblo-primary"
-                  style={{ padding: '8px 22px', fontSize: '13px' }}
-                >
-                  Done
-                </button>
-              </div>
-            </div>
+                  {/* Email Dispatch Info Box */}
+                  <div
+                    style={{
+                      backgroundColor: 'rgba(5, 150, 105, 0.08)',
+                      border: '1.5px solid rgba(5, 150, 105, 0.25)',
+                      borderRadius: '14px',
+                      padding: '12px 16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      textAlign: 'left',
+                      marginBottom: '18px',
+                    }}
+                  >
+                    <Mail size={20} color="#059669" style={{ flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: '13px', color: '#065f46', fontFamily: 'var(--font-heading)' }}>
+                        Email Delivered to Recipient
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#047857', marginTop: '2px' }}>
+                        The recipient receives an email button to verify and set their password.
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Direct Link Actions Card */}
+                  <div
+                    style={{
+                      backgroundColor: 'rgba(84, 52, 136, 0.04)',
+                      border: '1.5px solid rgba(84, 52, 136, 0.15)',
+                      borderRadius: '16px',
+                      padding: '16px',
+                      marginBottom: '20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, color: '#543488', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'var(--font-heading)' }}>
+                        Direct Onboarding Link
+                      </span>
+                      <span style={{ fontSize: '11px', color: 'rgba(84, 52, 136, 0.65)', fontWeight: 600 }}>
+                        Single-Use Security Token
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => handleCopyLink(liveUrl)}
+                      className="btn-peblo-primary"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        fontSize: '14px',
+                        fontWeight: 700,
+                        borderRadius: '12px',
+                        backgroundColor: copiedLink ? '#059669' : undefined,
+                        borderColor: copiedLink ? '#059669' : undefined,
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      {copiedLink ? <Check size={16} /> : <Copy size={16} />}
+                      {copiedLink ? 'Copied to Clipboard!' : 'Copy Direct Setup Link'}
+                    </button>
+
+                    <a
+                      href={liveUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn-peblo-outline"
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        fontSize: '12.5px',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      <ExternalLink size={14} /> Open Verification Page Directly
+                    </a>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <button
+                      onClick={() => resendEmailMutation.mutate(successInviteData.userId)}
+                      disabled={resendEmailMutation.isPending}
+                      className="btn-peblo-outline"
+                      style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', padding: '8px 14px' }}
+                    >
+                      <Mail size={13} />
+                      {resendEmailMutation.isPending ? 'Resending...' : 'Resend Email'}
+                    </button>
+
+                    <button
+                      onClick={() => setSuccessInviteData(null)}
+                      className="btn-peblo-primary"
+                      style={{ padding: '8px 22px', fontSize: '13px' }}
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
           </div>,
           document.body
         )}

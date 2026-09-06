@@ -57,22 +57,18 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     <div
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: 'rgba(84, 52, 136, 0.45)',
-        backdropFilter: 'blur(6px)',
-        WebkitBackdropFilter: 'blur(6px)',
+        inset: 0,
+        backgroundColor: 'rgba(45, 24, 76, 0.65)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         zIndex: 999999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px',
+        padding: '16px',
         margin: 0,
         boxSizing: 'border-box',
+        overflowY: 'auto',
       }}
       onClick={!isLoading ? onCancel : undefined}
     >
