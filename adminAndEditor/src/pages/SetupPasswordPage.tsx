@@ -345,7 +345,26 @@ export const SetupPasswordPage: React.FC = () => {
 
           {/* ACTIVE FORM STATE */}
           {!verifying && !verifyError && !isSuccess && tokenData && (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative' }}>
+              {submitting && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(6px)',
+                    borderRadius: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 30,
+                    padding: '24px',
+                  }}
+                >
+                  <PebloLoader text="Activating account & configuring credentials..." size="md" minHeight="200px" />
+                </div>
+              )}
               {/* Account Info Pill */}
               <div
                 style={{

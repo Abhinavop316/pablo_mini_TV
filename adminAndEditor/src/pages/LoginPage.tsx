@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { PebloLoader } from '../components/PebloLoader';
 import { Lock, User as UserIcon, AlertCircle, ArrowRight } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
@@ -59,6 +60,32 @@ export const LoginPage: React.FC = () => {
           transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
         }}
       >
+        {/* Active Sign-in Popping Loader Overlay */}
+        {isSubmitting && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(6px)',
+              borderRadius: 'inherit',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 30,
+              padding: '24px',
+              animation: 'fadeIn 0.25s ease-out',
+            }}
+          >
+            <PebloLoader
+              text="Authenticating & Launching Studio..."
+              size="lg"
+              minHeight="220px"
+            />
+          </div>
+        )}
+
         {/* Brand Header with PeBlo Official Logo */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
