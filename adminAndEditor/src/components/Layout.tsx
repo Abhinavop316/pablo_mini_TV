@@ -19,6 +19,7 @@ export const Layout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const viewerUrl = (import.meta.env.VITE_VIEWER_URL as string) || 'http://localhost:5174';
 
   // Close mobile drawer whenever route changes
   useEffect(() => {
@@ -138,7 +139,7 @@ export const Layout: React.FC = () => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingTop: '18px', borderTop: '1.5px solid rgba(84, 52, 136, 0.12)' }}>
         {/* Open Viewer CTA */}
         <a
-          href="http://localhost:5174"
+          href={viewerUrl}
           target="_blank"
           rel="noreferrer"
           style={{
