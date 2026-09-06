@@ -15,6 +15,22 @@ from app.database import Base, get_db
 from app.main import app
 from app.models.user import User, UserRole
 
+@pytest.fixture(scope="session", autouse=True)
+def setup_test_database():
+    import app.models
+    from app.seed import seed_database
+    engine = create_engine(settings.DATABASE_URL)
+    Base.metadata.create_all(bind=engine)
+    Session = sessionmaker(bind=engine)
+    db = Session()
+    try:
+        if db.query(app.models.Show).count() == 0:
+            seed_database(reset=False)
+    finally:
+        db.close()
+    yield
+
+
 # Use TestClient
 @pytest.fixture(scope="session")
 def client():
