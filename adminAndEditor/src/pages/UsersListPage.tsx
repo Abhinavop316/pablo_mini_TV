@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import type { UserItem, UserListResponse, CreateUserResponse, SetupTokenResponse, SendSetupEmailResponse } from '../api/types';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { PebloLoader } from '../components/PebloLoader';
 import {
   Users,
   UserPlus,
@@ -734,10 +735,7 @@ export const UsersListPage: React.FC = () => {
         }}
       >
         {isLoading ? (
-          <div style={{ padding: '70px', textAlign: 'center', color: '#543488' }}>
-            <RefreshCw size={32} className="spin" style={{ margin: '0 auto 14px' }} />
-            <p style={{ fontWeight: 700, fontSize: '15px' }}>Loading directory...</p>
-          </div>
+          <PebloLoader text="Loading team directory..." minHeight="240px" />
         ) : filteredUsers.length === 0 ? (
           <div style={{ padding: '60px 20px', textAlign: 'center' }}>
             <Users size={46} color="rgba(84, 52, 136, 0.3)" style={{ margin: '0 auto 14px' }} />

@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ShieldAlert } from 'lucide-react';
+import { PebloLoader } from './PebloLoader';
 
 interface ProtectedRouteProps {
   requireAdmin?: boolean;
@@ -11,11 +12,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requireAdmin = f
   const { isAuthenticated, isAdmin, isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', color: 'var(--text-secondary)' }}>
-        <p>Loading application state...</p>
-      </div>
-    );
+    return <PebloLoader text="Loading application..." minHeight="80vh" size={68} />;
   }
 
   if (!isAuthenticated) {

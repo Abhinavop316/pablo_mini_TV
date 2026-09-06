@@ -6,6 +6,7 @@ import type { Episode, ItemStatus } from '../api/types';
 import { ArtworkUploader } from '../components/ArtworkUploader';
 import { LANGUAGES, CONVENTIONS } from '../constants/taxonomies';
 import { CustomSelect } from '../components/CustomSelect';
+import { PebloLoader } from '../components/PebloLoader';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 
 export const EpisodeFormPage: React.FC = () => {
@@ -105,7 +106,7 @@ export const EpisodeFormPage: React.FC = () => {
   const formattedSeconds = !isNaN(parsedDuration) && parsedDuration > 0 ? parsedDuration % 60 : 0;
 
   if (isEditing && isLoading) {
-    return <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading episode...</div>;
+    return <PebloLoader text="Loading episode..." minHeight="300px" />;
   }
 
   return (

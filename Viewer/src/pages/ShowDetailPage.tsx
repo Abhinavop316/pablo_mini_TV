@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api, API_BASE_URL } from '../api/client';
 import type { CatalogShow, CatalogTrailer } from '../api/types';
 import { TrailerModal } from '../components/TrailerModal';
+import { PebloLoader } from '../components/PebloLoader';
 import {
   ArrowLeft,
   Play,
@@ -44,11 +45,7 @@ export const ShowDetailPage: React.FC = () => {
     : null;
 
   if (isLoading) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#543488', backgroundColor: '#ffffff' }}>
-        <p style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: 600 }}>Loading show details...</p>
-      </div>
-    );
+    return <PebloLoader text="Loading show adventures..." minHeight="80vh" size="lg" />;
   }
 
   if (isError || !show) {

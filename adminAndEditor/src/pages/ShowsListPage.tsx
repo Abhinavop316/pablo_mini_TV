@@ -6,6 +6,7 @@ import type { ShowListResponse } from '../api/types';
 import { StatusBadge } from '../components/StatusBadge';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { CustomSelect } from '../components/CustomSelect';
+import { PebloLoader } from '../components/PebloLoader';
 import { SECTIONS, LANGUAGES } from '../constants/taxonomies';
 import {
   Search,
@@ -509,9 +510,7 @@ export const ShowsListPage: React.FC = () => {
         }}
       >
         {isLoading ? (
-          <div style={{ padding: '48px 20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-            Loading shows catalogue...
-          </div>
+          <PebloLoader text="Loading shows catalogue..." minHeight="240px" />
         ) : isError ? (
           <div style={{ padding: '48px 20px', textAlign: 'center', color: 'var(--danger)' }}>
             Failed to load shows. Please refresh.

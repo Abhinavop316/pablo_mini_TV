@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client';
+import { PebloLoader } from '../components/PebloLoader';
 import type {
   VerifySetupTokenResponse,
   CompleteSetupResponse,
@@ -253,12 +254,7 @@ export const SetupPasswordPage: React.FC = () => {
         <div style={{ padding: '36px 32px' }}>
           {/* LOADING STATE */}
           {verifying && (
-            <div style={{ padding: '40px 20px', textAlign: 'center', color: '#543488' }}>
-              <RefreshCw size={40} className="spin" style={{ margin: '0 auto 16px' }} />
-              <p style={{ fontWeight: 800, fontSize: '15px', fontFamily: 'var(--font-heading)' }}>
-                Verifying your invitation link...
-              </p>
-            </div>
+            <PebloLoader text="Verifying invitation security token..." minHeight="180px" />
           )}
 
           {/* ERROR STATE */}

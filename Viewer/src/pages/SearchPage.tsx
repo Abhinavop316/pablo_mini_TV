@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import type { CatalogSearchResult } from '../api/types';
 import { ShowCard } from '../components/ShowCard';
+import { PebloLoader } from '../components/PebloLoader';
 import { Search, Film, X, SlidersHorizontal } from 'lucide-react';
 
 export const SearchPage: React.FC = () => {
@@ -563,9 +564,7 @@ export const SearchPage: React.FC = () => {
 
       {/* Results Grid */}
       {isLoading ? (
-        <div style={{ padding: '60px', textAlign: 'center', color: '#543488', fontFamily: 'var(--font-heading)', fontSize: '18px' }}>
-          Searching catalogue...
-        </div>
+        <PebloLoader text="Searching catalogue..." minHeight="300px" size="md" />
       ) : shows.length === 0 ? (
         <div
           style={{

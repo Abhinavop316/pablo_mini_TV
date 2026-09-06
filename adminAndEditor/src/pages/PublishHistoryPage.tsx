@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api, API_BASE_URL } from '../api/client';
+import { PebloLoader } from '../components/PebloLoader';
 import type {
   PublishHistoryResponse,
   PublishRun,
@@ -584,9 +585,7 @@ export const PublishHistoryPage: React.FC = () => {
 
           {/* Shows Tree List */}
           {showsLoading ? (
-            <div style={{ padding: '60px', textAlign: 'center', color: '#543488', fontFamily: 'var(--font-heading)', fontSize: '18px' }}>
-              Loading hierarchical show & episode publication timelines...
-            </div>
+            <PebloLoader text="Loading publication timeline..." minHeight="260px" />
           ) : filteredShows.length === 0 ? (
             <div className="interactive-card" style={{ padding: '48px 24px', textAlign: 'center' }}>
               <Tv size={44} color="#543488" style={{ margin: '0 auto 12px' }} />
@@ -1149,9 +1148,7 @@ export const PublishHistoryPage: React.FC = () => {
       {viewMode === 'runs_timeline' && (
         <div style={{ maxWidth: '920px', margin: '0 auto' }}>
           {runsLoading ? (
-            <div style={{ padding: '60px', textAlign: 'center', color: '#543488', fontFamily: 'var(--font-heading)', fontSize: '18px' }}>
-              Loading release pipeline timeline...
-            </div>
+            <PebloLoader text="Loading release pipeline timeline..." minHeight="260px" />
           ) : runs.length === 0 ? (
             <div className="interactive-card" style={{ padding: '48px 24px', textAlign: 'center' }}>
               <History size={44} color="#543488" style={{ margin: '0 auto 12px' }} />
@@ -1405,8 +1402,8 @@ export const PublishHistoryPage: React.FC = () => {
               <tbody>
                 {runsLoading ? (
                   <tr>
-                    <td colSpan={6} style={{ padding: '40px', textAlign: 'center', color: '#543488', fontFamily: 'var(--font-heading)' }}>
-                      Loading release log...
+                    <td colSpan={6} style={{ padding: '40px', textAlign: 'center' }}>
+                      <PebloLoader text="Loading release log..." minHeight="160px" size={48} />
                     </td>
                   </tr>
                 ) : runs.map((run, idx) => {

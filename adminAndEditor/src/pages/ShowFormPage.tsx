@@ -5,6 +5,7 @@ import { api } from '../api/client';
 import type { Show, ItemStatus } from '../api/types';
 import { SECTIONS, CATEGORIES, LANGUAGES } from '../constants/taxonomies';
 import { CustomSelect } from '../components/CustomSelect';
+import { PebloLoader } from '../components/PebloLoader';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 
 export const ShowFormPage: React.FC = () => {
@@ -80,11 +81,7 @@ export const ShowFormPage: React.FC = () => {
   };
 
   if (isEditing && isLoading) {
-    return (
-      <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-        Loading show details...
-      </div>
-    );
+    return <PebloLoader text="Loading show details..." minHeight="300px" />;
   }
 
   return (

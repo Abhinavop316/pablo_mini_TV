@@ -5,6 +5,7 @@ import { api, API_BASE_URL } from '../api/client';
 import type { CatalogResponse, CatalogTrailer } from '../api/types';
 import { ShowCard } from '../components/ShowCard';
 import { TrailerModal } from '../components/TrailerModal';
+import { PebloLoader } from '../components/PebloLoader';
 import { Play, Info, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -104,11 +105,7 @@ export const HomePage: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#543488', backgroundColor: '#ffffff' }}>
-        <p style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: 600 }}>Loading PeBlo playground...</p>
-      </div>
-    );
+    return <PebloLoader text="Loading PeBlo playground..." minHeight="80vh" size="lg" />;
   }
 
   if (isError || !catalog) {

@@ -6,6 +6,7 @@ import type { Show, Season } from '../api/types';
 import { StatusBadge } from '../components/StatusBadge';
 import { ArtworkUploader } from '../components/ArtworkUploader';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { PebloLoader } from '../components/PebloLoader';
 import {
   ArrowLeft,
   Edit2,
@@ -211,11 +212,7 @@ export const ShowDetailPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-        Loading show workspace...
-      </div>
-    );
+    return <PebloLoader text="Loading show workspace..." minHeight="360px" />;
   }
 
   if (isError || !show) {
