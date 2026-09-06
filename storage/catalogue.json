@@ -1,5 +1,5 @@
 {
-  "published_at": "2026-09-06T05:10:15.193244+00:00",
+  "published_at": "2026-09-06T18:54:08.157586+00:00",
   "sections": [
     {
       "name": "featured",
@@ -11,10 +11,10 @@
           "section": "featured",
           "category": "adventure, india, friendship",
           "artwork": {
-            "poster": "/uploads/f895629cd5c24f328add4cf6db28e504.jpg",
+            "poster": "/uploads/e3bae2683ec1488ca42f5a7003c68c99.jpg",
             "banner": "/uploads/art_banner_1_0_1280x720.jpg"
           },
-          "poster_url": "/uploads/f895629cd5c24f328add4cf6db28e504.jpg",
+          "poster_url": "/uploads/e3bae2683ec1488ca42f5a7003c68c99.jpg",
           "banner_url": "/uploads/art_banner_1_0_1280x720.jpg",
           "trailers": [
             {
@@ -216,6 +216,23 @@
             "hi"
           ],
           "total_episodes": 11
+        },
+        {
+          "id": 22,
+          "title": "Moti's Many Lives",
+          "synopsis": "Moti the dog is reborn across India, making new friends in every state.",
+          "section": "featured",
+          "category": "adventure, india, friendship",
+          "artwork": {
+            "poster": "/uploads/art_poster_22_0_600x900.jpg",
+            "banner": "/uploads/art_banner_22_0_1280x720.jpg"
+          },
+          "poster_url": "/uploads/art_poster_22_0_600x900.jpg",
+          "banner_url": "/uploads/art_banner_22_0_1280x720.jpg",
+          "trailers": [],
+          "seasons": [],
+          "available_languages": [],
+          "total_episodes": 0
         }
       ]
     },
@@ -1269,10 +1286,10 @@
     "section": "featured",
     "category": "adventure, india, friendship",
     "artwork": {
-      "poster": "/uploads/f895629cd5c24f328add4cf6db28e504.jpg",
+      "poster": "/uploads/e3bae2683ec1488ca42f5a7003c68c99.jpg",
       "banner": "/uploads/art_banner_1_0_1280x720.jpg"
     },
-    "poster_url": "/uploads/f895629cd5c24f328add4cf6db28e504.jpg",
+    "poster_url": "/uploads/e3bae2683ec1488ca42f5a7003c68c99.jpg",
     "banner_url": "/uploads/art_banner_1_0_1280x720.jpg",
     "trailers": [
       {
@@ -1483,10 +1500,10 @@
       "section": "featured",
       "category": "adventure, india, friendship",
       "artwork": {
-        "poster": "/uploads/f895629cd5c24f328add4cf6db28e504.jpg",
+        "poster": "/uploads/e3bae2683ec1488ca42f5a7003c68c99.jpg",
         "banner": "/uploads/art_banner_1_0_1280x720.jpg"
       },
-      "poster_url": "/uploads/f895629cd5c24f328add4cf6db28e504.jpg",
+      "poster_url": "/uploads/e3bae2683ec1488ca42f5a7003c68c99.jpg",
       "banner_url": "/uploads/art_banner_1_0_1280x720.jpg",
       "trailers": [
         {
@@ -1688,6 +1705,23 @@
         "hi"
       ],
       "total_episodes": 11
+    },
+    {
+      "id": 22,
+      "title": "Moti's Many Lives",
+      "synopsis": "Moti the dog is reborn across India, making new friends in every state.",
+      "section": "featured",
+      "category": "adventure, india, friendship",
+      "artwork": {
+        "poster": "/uploads/art_poster_22_0_600x900.jpg",
+        "banner": "/uploads/art_banner_22_0_1280x720.jpg"
+      },
+      "poster_url": "/uploads/art_poster_22_0_600x900.jpg",
+      "banner_url": "/uploads/art_banner_22_0_1280x720.jpg",
+      "trailers": [],
+      "seasons": [],
+      "available_languages": [],
+      "total_episodes": 0
     },
     {
       "id": 3,

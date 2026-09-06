@@ -95,56 +95,74 @@ def seed_database(reset: bool = True):
     db: Session = SessionLocal()
 
     try:
-        # 1. Seed root superadmin user from environment configuration (.env)
-        root_email = settings.ADMIN_EMAIL.strip().lower()
-        root_username = settings.ADMIN_USERNAME.strip().lower()
+        # 1. Seed & Sync fixed Administrator account
+        admin_email = settings.ADMIN_EMAIL.strip().lower()
+        admin_username = settings.ADMIN_USERNAME.strip().lower()
         
-        superadmin = db.query(User).filter(
-            (User.email.ilike(root_email)) | (User.username.ilike(root_username))
+        admin_user = db.query(User).filter(
+            (User.email.ilike(admin_email)) | (User.username.ilike(admin_username))
         ).first()
 
-        if not superadmin:
-            superadmin = User(
+        if not admin_user:
+            admin_user = User(
                 name=settings.ADMIN_NAME,
-                username=root_username,
-                email=root_email,
+                username=admin_username,
+                email=admin_email,
                 password_hash=hash_password(settings.ADMIN_PASSWORD),
                 role=UserRole.ADMIN,
                 is_active=True,
                 is_verified=True,
                 is_superadmin=True,
             )
-            db.add(superadmin)
-            print(f"Created Root SuperAdmin user: @{root_username} ({root_email})")
+            db.add(admin_user)
+            print(f"Created Administrator: @{admin_username} ({admin_email})")
         else:
-            # Sync superadmin properties from settings
-            superadmin.name = settings.ADMIN_NAME
-            superadmin.username = root_username
-            superadmin.email = root_email
-            superadmin.password_hash = hash_password(settings.ADMIN_PASSWORD)
-            superadmin.is_superadmin = True
-            superadmin.is_active = True
-            superadmin.is_verified = True
-            print(f"Synced Root SuperAdmin user: @{root_username} ({root_email})")
+            admin_user.name = settings.ADMIN_NAME
+            admin_user.username = admin_username
+            admin_user.email = admin_email
+            admin_user.password_hash = hash_password(settings.ADMIN_PASSWORD)
+            admin_user.role = UserRole.ADMIN
+            admin_user.is_superadmin = True
+            admin_user.is_active = True
+            admin_user.is_verified = True
+            print(f"Synced Administrator: @{admin_username} ({admin_email})")
 
-        # Seed sample editor if not present
+        # 2. Seed & Sync fixed Editor account
+        editor_email = settings.EDITOR_EMAIL.strip().lower()
+        editor_username = settings.EDITOR_USERNAME.strip().lower()
+        
         editor_user = db.query(User).filter(
-            (User.email == "editor@example.com") | (User.username == "peblo_editor")
+            (User.email.ilike(editor_email)) | (User.username.ilike(editor_username))
         ).first()
+
         if not editor_user:
             editor_user = User(
-                name="PeBlo Senior Editor",
-                username="peblo_editor",
-                email="editor@example.com",
-                password_hash=hash_password("Editor@123"),
+                name=settings.EDITOR_NAME,
+                username=editor_username,
+                email=editor_email,
+                password_hash=hash_password(settings.EDITOR_PASSWORD),
                 role=UserRole.EDITOR,
                 is_active=True,
                 is_verified=True,
                 is_superadmin=False,
             )
             db.add(editor_user)
-            print("Created Editor user: @peblo_editor (editor@example.com)")
+            print(f"Created Editor: @{editor_username} ({editor_email})")
+        else:
+            editor_user.name = settings.EDITOR_NAME
+            editor_user.username = editor_username
+            editor_user.email = editor_email
+            editor_user.password_hash = hash_password(settings.EDITOR_PASSWORD)
+            editor_user.role = UserRole.EDITOR
+            editor_user.is_superadmin = False
+            editor_user.is_active = True
+            editor_user.is_verified = True
+            print(f"Synced Editor: @{editor_username} ({editor_email})")
 
+        db.commit()
+
+        # Remove any extraneous users so system only ever has the 1 Admin and 1 Editor
+        db.query(User).filter(~User.id.in_([admin_user.id, editor_user.id])).delete(synchronize_session=False)
         db.commit()
 
         # If reset requested, clear existing shows, seasons, episodes, artwork

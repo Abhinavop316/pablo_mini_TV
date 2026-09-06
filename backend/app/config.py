@@ -19,24 +19,20 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = str(BASE_DIR / "uploads")
     CATALOGUE_PATH: str = str(BASE_DIR / "storage" / "catalogue.json")
 
-    # Root SuperAdmin Configuration from .env
+    # Fixed Administrator Credentials
     ADMIN_EMAIL: str = "admin@peblo.tv"
     ADMIN_USERNAME: str = "peblo_admin"
     ADMIN_PASSWORD: str = "Admin@123"
     ADMIN_NAME: str = "Peblo Super Admin"
 
-    # Frontend URL for setup / verification links
-    FRONTEND_URL: str = "http://localhost:5173"
+    # Fixed Editor Credentials
+    EDITOR_EMAIL: str = "editor@peblo.tv"
+    EDITOR_USERNAME: str = "peblo_editor"
+    EDITOR_PASSWORD: str = "Editor@123"
+    EDITOR_NAME: str = "Peblo Editor"
 
-    # SMTP Email Configuration
-    SMTP_HOST: str = ""
-    SMTP_PORT: int = 587
-    SMTP_USER: str = ""
-    SMTP_PASSWORD: str = ""
-    SMTP_FROM_EMAIL: str = ""
-    SMTP_FROM_NAME: str = "PeBlo Kids TV Studio"
-    SMTP_TLS: bool = True
-    SMTP_SSL: bool = False
+    # Frontend URL
+    FRONTEND_URL: str = "http://localhost:5173"
 
     @field_validator("DATABASE_URL", mode="after")
     @classmethod
