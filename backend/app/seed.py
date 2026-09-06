@@ -53,6 +53,34 @@ def generate_sample_image(width: int, height: int, text: str, bg_color: str, tex
     return buf.getvalue()
 
 
+def get_preset_image_bytes(type_: ArtworkType) -> tuple[bytes, int, int]:
+    """Retrieves standard high quality preset artwork for the given type."""
+    type_map = {
+        ArtworkType.POSTER: ("poster_good.jpg", 600, 900),
+        ArtworkType.BANNER: ("banner_good.jpg", 1280, 720),
+        ArtworkType.THUMBNAIL: ("thumb_good.jpg", 640, 360),
+    }
+    filename, default_w, default_h = type_map[type_]
+    
+    # Check potential sources
+    potential_paths = [
+        Path(settings.UPLOAD_DIR) / filename,
+        Path(__file__).resolve().parent.parent / "uploads" / filename,
+        Path(__file__).resolve().parent.parent.parent / "adminAndEditor" / "public" / filename,
+        Path(__file__).resolve().parent.parent.parent / "Viewer" / "public" / filename,
+    ]
+    
+    for p in potential_paths:
+        if p.exists():
+            with open(p, "rb") as f:
+                content = f.read()
+            return content, default_w, default_h
+            
+    # Fallback to generated image
+    fallback_bytes = generate_sample_image(default_w, default_h, f"PeBlo\n{type_.value.capitalize()}", "#543488")
+    return fallback_bytes, default_w, default_h
+
+
 def create_and_save_artwork(
     db: Session,
     type_: ArtworkType,
@@ -61,14 +89,7 @@ def create_and_save_artwork(
     show_id: int = None,
     episode_id: int = None,
 ) -> Artwork:
-    if type_ == ArtworkType.POSTER:
-        w, h = 600, 900
-    elif type_ == ArtworkType.BANNER:
-        w, h = 1280, 720
-    else:  # THUMBNAIL
-        w, h = 640, 360
-
-    img_bytes = generate_sample_image(w, h, label, bg_color)
+    img_bytes, w, h = get_preset_image_bytes(type_)
     filename = f"art_{type_.value.lower()}_{show_id or 0}_{episode_id or 0}_{w}x{h}.jpg"
     dest = Path(settings.UPLOAD_DIR) / filename
     with open(dest, "wb") as f:
