@@ -42,10 +42,10 @@ def test_create_editor_with_setup_token_flow(client, admin_token):
     assert verify_data["email"] == unique_email
     assert verify_data["role"] == "EDITOR"
 
-    # 3. Editor sets password
+    # 3. Editor sets password and username
     complete_res = client.post(
         "/auth/complete-setup",
-        json={"token": token, "password": "NewEditorPassword123!"},
+        json={"token": token, "username": f"ed_{uuid.uuid4().hex[:6]}", "password": "NewEditorPassword123!"},
     )
     assert complete_res.status_code == 200
     assert complete_res.json()["success"] is True
@@ -83,7 +83,7 @@ def test_admin_invite_editor_and_status_management(client, admin_token):
     # 2. Editor completes setup
     complete_res = client.post(
         "/auth/complete-setup",
-        json={"token": token, "password": "VerifiedPassword123!"},
+        json={"token": token, "username": f"st_{uuid.uuid4().hex[:6]}", "password": "VerifiedPassword123!"},
     )
     assert complete_res.status_code == 200
 
@@ -115,7 +115,13 @@ def test_admin_invite_editor_and_status_management(client, admin_token):
 
 
 
-def test_admin_send_setup_email(client, admin_token):
+def test_admin_send_setup_email(client, admin_token, monkeypatch):
+    import app.routers.admin_users as admin_users_mod
+    import app.services.email_service as email_service_mod
+    mock_email = lambda *args, **kwargs: {"sent": True, "message": "Mock email sent successfully."}
+    monkeypatch.setattr(admin_users_mod, "send_password_setup_email", mock_email)
+    monkeypatch.setattr(email_service_mod, "send_password_setup_email", mock_email)
+
     unique_email = f"email_editor_{uuid.uuid4().hex[:8]}@example.com"
 
     # Create editor

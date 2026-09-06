@@ -22,7 +22,7 @@ def client():
         yield test_client
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def db_session():
     engine = create_engine(settings.DATABASE_URL)
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -30,6 +30,10 @@ def db_session():
     try:
         yield db
     finally:
+        try:
+            db.rollback()
+        except Exception:
+            pass
         db.close()
 
 
