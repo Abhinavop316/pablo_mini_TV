@@ -18,6 +18,18 @@
   <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
 </p>
 
+<p align="center">
+  <a href="https://pebloadmineditor.vercel.app/"><img src="https://img.shields.io/badge/Live%20Studio%20CMS-pebloadmineditor.vercel.app-543488?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Studio CMS" /></a>
+  <a href="https://pablo-mini-tv-psi.vercel.app/"><img src="https://img.shields.io/badge/Live%20Viewer%20App-pablo--mini--tv--psi.vercel.app-ff007f?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Viewer App" /></a>
+</p>
+
+---
+
+> [!TIP]
+> ### 🌐 Live Production Deployments
+> - 🎨 **Studio CMS (Admin & Editor Console)**: [https://pebloadmineditor.vercel.app/](https://pebloadmineditor.vercel.app/)
+> - 🍿 **Viewer Streaming App (Netflix-Style Kids Experience)**: [https://pablo-mini-tv-psi.vercel.app/](https://pablo-mini-tv-psi.vercel.app/)
+
 ---
 
 > [!TIP]
@@ -29,18 +41,19 @@
 ---
 
 ## 📑 Table of Contents
-1. [🌟 Architecture Overview](#-1-architecture-overview)
-2. [🚀 Quickstart: One-Command Docker Setup](#-2-quickstart-one-command-docker-setup)
-3. [🔑 Accounts & Access Credentials](#-3-accounts--access-credentials)
-4. [🛠️ Manual Local Development Setup](#-4-manual-local-development-setup)
-5. [🎯 Core Conventions & Data Integrity](#-5-core-conventions--data-integrity)
-6. [⚡ Part A — Backend Architecture & API Design](#-6-part-a--backend-architecture--api-design)
-7. [🎨 Part B — Studio CMS (Admin & Editor Console)](#-7-part-b--studio-cms-admin--editor-console)
-8. [🍿 Part C — Viewer UI (Netflix-Style Kids Streaming)](#-8-part-c--viewer-ui-netflix-style-kids-streaming)
-9. [🚢 Part D — Docker, CI/CD & Deployment](#-9-part-d--docker-cicd--deployment)
-10. [🧠 Part E — Written Engineering Analysis & Trade-Offs](#-10-part-e--written-engineering-analysis--trade-offs)
-11. [🧪 Automated Test Suite](#-11-automated-test-suite)
-12. [⏱️ Time Spent Breakdown](#-12-time-spent-breakdown)
+1. [🌐 Live Deployments](#-live-production-deployments)
+2. [🌟 Architecture Overview](#-1-architecture-overview)
+3. [🚀 Quickstart: One-Command Docker Setup](#-2-quickstart-one-command-docker-setup)
+4. [🔑 Accounts & Access Credentials](#-3-accounts--access-credentials)
+5. [🛠️ Manual Local Development Setup](#-4-manual-local-development-setup)
+6. [🎯 Core Conventions & Data Integrity](#-5-core-conventions--data-integrity)
+7. [⚡ Part A — Backend Architecture & API Design](#-6-part-a--backend-architecture--api-design)
+8. [🎨 Part B — Studio CMS (Admin & Editor Console)](#-7-part-b--studio-cms-admin--editor-console)
+9. [🍿 Part C — Viewer UI (Netflix-Style Kids Streaming)](#-8-part-c--viewer-ui-netflix-style-kids-streaming)
+10. [🚢 Part D — Docker, CI/CD & Deployment](#-9-part-d--docker-cicd--deployment)
+11. [🧠 Part E — Written Engineering Analysis & Trade-Offs](#-10-part-e--written-engineering-analysis--trade-offs)
+12. [🧪 Automated Test Suite](#-11-automated-test-suite)
+13. [⏱️ Time Spent Breakdown](#-12-time-spent-breakdown)
 
 ---
 
@@ -52,7 +65,7 @@ PeBlo TV Mini decouples the **internal editorial CMS** from the **public viewer 
 ┌────────────────────────────────────────────────────────────────────┐
 │                         INTERNAL STUDIO CMS                        │
 │        Admin & Editor Console (React 18 + TypeScript + Vite)       │
-│              http://localhost:5173                                 │
+│     https://pebloadmineditor.vercel.app / http://localhost:5173    │
 └─────────────────────────────────┬──────────────────────────────────┘
                                   │
                    JWT Bearer Auth & RBAC Enforcement
@@ -83,6 +96,7 @@ PeBlo TV Mini decouples the **internal editorial CMS** from the **public viewer 
                                        ┌─────────────────────────────┐
                                        │      VIEWER FRONTEND        │
                                        │  Netflix-Style Streaming UI │
+                                       │https://pablo-mini-tv-psi... │
                                        │    http://localhost:5174    │
                                        └─────────────────────────────┘
 ```
@@ -97,14 +111,14 @@ The entire multi-container architecture (PostgreSQL, Backend API with automatic 
 docker-compose up --build
 ```
 
-### 🌐 Services & Port Mapping
-| Service | Local URL | Description |
-|---|---|---|
-| **CMS Studio Frontend** | `http://localhost:5173` | Internal editorial console for Admins & Editors |
-| **Viewer Streaming App** | `http://localhost:5174` | Public Netflix-style kids browsing surface |
-| **FastAPI Backend** | `http://localhost:8000` | REST API, OpenAPI interactive docs at `/docs` |
-| **Health Check** | `http://localhost:8000/health` | Live database connectivity probe |
-| **PostgreSQL** | `localhost:5432` | Relational database (`pablo_db`) |
+### 🌐 Services & Deployment URLs
+| Service | Live Deployment | Local URL | Description |
+|---|---|---|---|
+| **CMS Studio Frontend** | 🚀 [pebloadmineditor.vercel.app](https://pebloadmineditor.vercel.app/) | `http://localhost:5173` | Internal editorial console for Admins & Editors |
+| **Viewer Streaming App** | 🚀 [pablo-mini-tv-psi.vercel.app](https://pablo-mini-tv-psi.vercel.app/) | `http://localhost:5174` | Public Netflix-style kids browsing surface |
+| **FastAPI Backend** | — | `http://localhost:8000` | REST API, OpenAPI interactive docs at `/docs` |
+| **Health Check** | — | `http://localhost:8000/health` | Live database connectivity probe |
+| **PostgreSQL** | — | `localhost:5432` | Relational database (`pablo_db`) |
 
 ---
 
@@ -211,6 +225,8 @@ Artwork validation is strictly enforced on the server:
 
 ## 🎨 7. Part B — Studio CMS (Admin & Editor Console)
 
+**Live Deployment**: [https://pebloadmineditor.vercel.app/](https://pebloadmineditor.vercel.app/)
+
 Built with **React 18**, **TypeScript**, and **TanStack Query (v5)**:
 - **Design System**: Strict White & `#543488` Purple palette with micro-interactions and elevated cards.
 - **Custom Select Component (`CustomSelect.tsx`)**: Replaces browser native select elements with animated popovers, rotating chevrons, and spring-bounced checkmarks.
@@ -221,6 +237,8 @@ Built with **React 18**, **TypeScript**, and **TanStack Query (v5)**:
 ---
 
 ## 🍿 8. Part C — Viewer UI (Netflix-Style Kids Streaming)
+
+**Live Deployment**: [https://pablo-mini-tv-psi.vercel.app/](https://pablo-mini-tv-psi.vercel.app/)
 
 Built with **React 18** and **TypeScript**:
 - **Hero Banner**: Displays high-resolution 16:9 hero artwork from featured shows with prominent "Watch Now" action.
@@ -235,6 +253,10 @@ Built with **React 18** and **TypeScript**:
 ---
 
 ## 🚢 9. Part D — Docker, CI/CD & Deployment
+
+### 🌐 Live Production Deployments
+- **CMS Studio Frontend**: [https://pebloadmineditor.vercel.app/](https://pebloadmineditor.vercel.app/)
+- **Viewer Streaming App**: [https://pablo-mini-tv-psi.vercel.app/](https://pablo-mini-tv-psi.vercel.app/)
 
 ### 🐳 Multi-Container Docker Compose
 The `docker-compose.yml` orchestrates:
